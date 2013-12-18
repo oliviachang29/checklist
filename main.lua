@@ -1,11 +1,17 @@
 --Checklist
-
 display.setStatusBar(display.HiddenStatusBar)
 
---Require widget
-local widget = require( "widget" )
+--Require
+local widget = require( "widget" ) --widgets supplied by corona
+local globalData = require("globalData") --globalData.lua
+local color = require("color")
 
+--Create navigation things
+local navGroup = display.newGroup()
 local navBar = display.newRect(0, 0, 640, 80)
+navGroup:insert(navBar)
+local navText = display.newText(navGroup, "Lists", 60, 23, "Segoe UI Light", 20)
+navText:setTextColor(color.blue.r, color.blue.g, color.blue.b) --rgb(0, 209, 204)
 
 local widgetGroup = display.newGroup()
 
@@ -70,7 +76,7 @@ for i = 1, 40 do
     if ( i == 1 or i % 11 == 0 ) then
         isCategory = true
         rowHeight = 40
-        rowColor = { default={ 0.9, 0.5, 0.56 } }
+        rowColor = { default={ color.pink.r, color.pink.g, color.pink.b } }
     end
     
      -- Insert a row into the tableView
