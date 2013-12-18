@@ -1,4 +1,5 @@
---Checklist
+--Checklist: main.lua
+--(c) 2013 Olivia Chang
 display.setStatusBar(display.HiddenStatusBar)
 
 --Require
