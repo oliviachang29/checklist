@@ -6,16 +6,21 @@ local widget = require( "widget" ) --widgets supplied by corona
 local globalData = require("globalData") --globalData.lua
 local color = require("color")
 
+--constants
+local centerX = display.contentWidth * .5
+local centerY = display.contentHeight * .5
 --Create navigation things
 local navGroup = display.newGroup()
-local navBar = display.newRect(0, 0, 640, 80)
+local navBar = display.newRect(0, 0, 640, 100)
+navBar:setFillColor(0, 0.6, 0.6)
 navGroup:insert(navBar)
-local navText = display.newText(navGroup, "Lists", 60, 23, "Segoe UI Light", 20)
-navText:setTextColor(color.blue.r, color.blue.g, color.blue.b) --rgb(0, 209, 204)
-
+local listName = "Groceries"
+local navText = display.newText(navGroup, "Lists", 30, 23, native.systemFont, 20)
+navText:setFillColor(1,1,1)
+local listNameText = display.newText(navGroup, listName, centerX, 23, native.systemFont, 20)
+listNameText:setFillColor(0,0,0) 
 local widgetGroup = display.newGroup()
 
--- The "onRowRender" function may go here (see example under "Inserting Rows", above)
 local function onRowRender( event )
 
     -- Get reference to the row group
@@ -30,17 +35,21 @@ local function onRowRender( event )
     
     if (row.isCategory) then
         if row.index == 1 then
-            rowText = "Category 1"
+            rowText = "CATEGORY 1"
         else
-            rowText = "Category " .. row.index % 10 + 1
+            rowText = "CATEGORY " .. row.index % 10 + 1
         end
     else
-        rowText = "Pancakes " .. row.index
+        rowText = "Gingerbread " .. row.index
     end
     
-    rowTitle = display.newText( row, rowText, 0, 0, nil, 14 )
-    
-    rowTitle:setFillColor( 0 )
+--    if (row.isCateogry == true) then
+--        rowTitle = display.newText( row, rowText, centerX, 0, "Museo Sans 300", 20 )
+--    else
+--        rowTitle = display.newText( row, rowText, centerX, 0, native.systemFont, 14 )
+--    end
+    local rowTitle = display.newText( row, rowText, centerX, 0, "Museo Sans 300", 18 )
+    rowTitle:setFillColor(0, 0.6, 0.6)
 
     -- Align the label left and vertically centered
     rowTitle.anchorX = 0
@@ -52,10 +61,9 @@ end
 local tableView = widget.newTableView
 {
     left = 0,
-    top = 40,
+    top = 50,
     height = 440,
     width = 320,
-    noLines = true,
     hideScrollBar = true,
     onRowRender = onRowRender,
     onRowTouch = onRowTouch
@@ -67,22 +75,22 @@ widgetGroup:insert( tableView )
 for i = 1, 40 do
     
     -- default is that row isn't a category
+    --this is the white rows
     isCategory = false
     rowHeight = 36
-    rowColor = { default={ 0.87, 0.7, 0.1, 0.93} }
+    rowColor = { default={1,1,1} }
     
     
     -- Make some rows categories
     if ( i == 1 or i % 11 == 0 ) then
         isCategory = true
-        rowHeight = 40
-        rowColor = { default={ color.pink.r, color.pink.g, color.pink.b } }
+        rowHeight = 50
+        rowColor = { default={ 1,1,1} }
     end
     
      -- Insert a row into the tableView
     tableView:insertRow(
         {
-            noLines = true,
             isCategory = isCategory,
             rowHeight = rowHeight,
             rowColor = rowColor,
