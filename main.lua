@@ -7,19 +7,25 @@ local widget = require( "widget" ) --widgets supplied by corona
 local globalData = require("globalData") --globalData.lua
 local color = require("color")
 
+
 --constants
 local centerX = display.contentWidth * .5
 local centerY = display.contentHeight * .5
+
+
 --Create navigation things
-local navGroup = display.newGroup()
-local navBar = display.newRect(0, 0, 640, 100)
-navBar:setFillColor(0, 0.6, 0.6)
-navGroup:insert(navBar)
-local listName = "Groceries"
-local navText = display.newText(navGroup, "Lists", 30, 23, native.systemFont, 20)
-navText:setFillColor(1,1,1)
-local listNameText = display.newText(navGroup, listName, centerX, 23, native.systemFont, 20)
-listNameText:setFillColor(0,0,0) 
+local function createNav()
+    local navGroup = display.newGroup()
+    local navBar = display.newRect(0, 0, 640, 100)
+    navBar:setFillColor(color.darkteal.r, color.darkteal.g, color.darkteal.b)
+    navGroup:insert(navBar)
+    local listName = "Groceries"
+    local navText = display.newText(navGroup, "Lists", 50, 23, "Museo Sans 300", 20)
+    navText:setFillColor(1,1,1)
+    local listNameText = display.newText(navGroup, listName, centerX, 23, "Museo Sans 300", 20) -- listName Text is the name of the list. In this it is Groceries
+    listNameText:setFillColor(0,0,0) 
+end
+
 local widgetGroup = display.newGroup()
 
 local function onRowRender( event )
@@ -37,11 +43,18 @@ local function onRowRender( event )
     if (row.isCategory) then
         if row.index == 1 then
             rowText = "CATEGORY 1"
+            rowTitle = display.newText(row, rowText, 0, 0, "Museo Sans 300", 20)
+            rowTitle.x = centerX
         else
             rowText = "CATEGORY " .. row.index % 10 + 1
+            rowTitle = display.newText(row, rowText, 0, 0, "Museo Sans 300", 20) 
+            rowTitle.x = centerX
         end
     else
-        rowText = "Gingerbread " .. row.index
+        rowText = "Graham Crackers " .. row.index
+        rowTitle = display.newText(row, rowText, 0,0, "Museo Sans 300", 20)
+        rowTitle:setFillColor(0,0,0)
+        rowTitle.x = centerX
     end
     
 --    if (row.isCateogry == true) then
@@ -49,8 +62,6 @@ local function onRowRender( event )
 --    else
 --        rowTitle = display.newText( row, rowText, centerX, 0, native.systemFont, 14 )
 --    end
-    local rowTitle = display.newText( row, rowText, centerX, 0, "Museo Sans 300", 18 )
-    rowTitle:setFillColor(0, 0.6, 0.6)
 
     -- Align the label left and vertically centered
     rowTitle.anchorX = 0
@@ -86,7 +97,7 @@ for i = 1, 40 do
     if ( i == 1 or i % 11 == 0 ) then
         isCategory = true
         rowHeight = 50
-        rowColor = { default={ 1,1,1} }
+        rowColor = { default={color.darkblue.r, color.darkblue.g, color.darkblue.b} }
     end
     
      -- Insert a row into the tableView
@@ -99,3 +110,6 @@ for i = 1, 40 do
         }
     )
 end
+
+--Blastoff
+createNav()
