@@ -19,9 +19,14 @@ local function createNav()
     local navBar = display.newRect(0, 0, 640, 100)
     navBar:setFillColor(color.darkteal.r, color.darkteal.g, color.darkteal.b)
     navGroup:insert(navBar)
-    local listName = "Groceries"
-    local navText = display.newText(navGroup, "Lists", 50, 23, "Museo Sans 300", 20)
+    
+    local navArrow = display.newImage("images/navArrow.png")
+    navArrow.x, navArrow.y =15, 23
+    transition.to(navArrow, {time = 0.00000000000001, xScale = 0.1, yScale = 0.1})
+    local navText = display.newText(navGroup, "Lists", 50, 23, "Museo Sans 300", 20) --navText is the hierarchy text "Lists"
     navText:setFillColor(1,1,1)
+    
+    local listName = "Groceries"
     local listNameText = display.newText(navGroup, listName, centerX, 23, "Museo Sans 300", 20) -- listName Text is the name of the list. In this it is Groceries
     listNameText:setFillColor(0,0,0) 
 end
