@@ -1,3 +1,3 @@
-Checklist:
-
-Never forget to do anything again.
+This.
+is.
+CHECKLIST.
