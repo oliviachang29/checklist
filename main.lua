@@ -56,18 +56,13 @@ local function onRowRender( event )
             rowTitle.x = centerX
         end
     else
-        rowText = "Graham Crackers " .. row.index
+        rowText = "Task " .. row.index
         rowTitle = display.newText(row, rowText, 0,0, "Museo Sans 300", 20)
         rowTitle:setFillColor(0,0,0)
         rowTitle.x = centerX
     end
-    
---    if (row.isCateogry == true) then
---        rowTitle = display.newText( row, rowText, centerX, 0, "Museo Sans 300", 20 )
---    else
---        rowTitle = display.newText( row, rowText, centerX, 0, native.systemFont, 14 )
---    end
-
+     
+     
     -- Align the label left and vertically centered
     rowTitle.anchorX = 0
     rowTitle.x = 0
@@ -92,13 +87,14 @@ widgetGroup:insert( tableView )
 for i = 1, 40 do
     
     -- default is that row isn't a category
-    --this is the white rows
+    --these are the white rows
     isCategory = false
     rowHeight = 36
     rowColor = { default={1,1,1} }
     
     
     -- Make some rows categories
+    --these are the dark blues
     if ( i == 1 or i % 11 == 0 ) then
         isCategory = true
         rowHeight = 50
