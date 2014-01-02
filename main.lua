@@ -5,19 +5,13 @@ display.setStatusBar(display.HiddenStatusBar)
 --Require
 local widget = require( "widget" ) --widgets supplied by corona
 local globalData = require("globalData") --globalData.lua
-local color = require("color")
-
-
---constants
-local centerX = display.contentWidth * .5
-local centerY = display.contentHeight * .5
-
+local constants = require("constants")
 
 --Create navigation things
 local function createNav()
     local navGroup = display.newGroup()
     local navBar = display.newRect(0, 0, 640, 100)
-    navBar:setFillColor(color.darkteal.r, color.darkteal.g, color.darkteal.b)
+    navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     navGroup:insert(navBar)
     
     local navArrow = display.newImage("images/navArrow.png")
@@ -27,7 +21,7 @@ local function createNav()
     navText:setFillColor(1,1,1)
     
     local listName = "Groceries"
-    local listNameText = display.newText(navGroup, listName, centerX, 23, "Museo Sans 300", 20) -- listName Text is the name of the list. In this it is Groceries
+    local listNameText = display.newText(navGroup, listName, constants.centerX, 23, "Museo Sans 300", 20) -- listName Text is the name of the list. In this it is Groceries
     listNameText:setFillColor(0,0,0) 
 end
 
@@ -49,17 +43,17 @@ local function onRowRender( event )
         if row.index == 1 then
             rowText = "CATEGORY 1"
             rowTitle = display.newText(row, rowText, 0, 0, "Museo Sans 300", 20)
-            rowTitle.x = centerX
+            rowTitle.x = constants.leftPadding
         else
             rowText = "CATEGORY " .. row.index % 10 + 1
             rowTitle = display.newText(row, rowText, 0, 0, "Museo Sans 300", 20) 
-            rowTitle.x = centerX
+            rowTitle.x = constants.leftPadding
         end
     else
         rowText = "Task " .. row.index
         rowTitle = display.newText(row, rowText, 0,0, "Museo Sans 300", 20)
         rowTitle:setFillColor(0,0,0)
-        rowTitle.x = centerX
+        rowTitle.x = constants.leftPadding
     end
      
      
@@ -98,7 +92,7 @@ for i = 1, 40 do
     if ( i == 1 or i % 11 == 0 ) then
         isCategory = true
         rowHeight = 50
-        rowColor = { default={color.darkblue.r, color.darkblue.g, color.darkblue.b} }
+        rowColor = { default={constants.darkblue.r, constants.darkblue.g, constants.darkblue.b} }
     end
     
      -- Insert a row into the tableView
