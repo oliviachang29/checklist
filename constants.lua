@@ -1,9 +1,10 @@
 --Constants
-local globalData = require("globalData")
+local globals = require("globals")
 
 --make sure to make "constants.whatever = {}"" (into a table) before you make it something else, or it won't work'
 --constants
 local constants = {}
+
 --constants.blue
 constants.blue = {}
 constants.blue.r = 0
@@ -34,6 +35,9 @@ constants.darkblue.r = 0
 constants.darkblue.g = 0.63529411764
 constants.darkblue.b= 0.61960784313
 
+--constants.lineColor
+constants.lineColor = {}
+constants.lineColor = 0.93333333333
 --display places
 constants.centerX = {}
 constants.centerX = display.contentCenterX

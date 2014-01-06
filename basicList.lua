@@ -1,4 +1,4 @@
---lists.lua
+--basicList.lua
 --(c) 2014 Olivia Chang
 
 --Require
@@ -20,50 +20,27 @@ storyboard.removeAll()
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
     local group = self.view
-    --Navigation
+    --Create navigation things
     local navBar = display.newRect(0, 0, 640, 100)
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     group:insert(navBar)
     
-    local navListsIcon = display.newImage("images/navListsIcon.png")
-    navListsIcon.x, navListsIcon.y =20, 23
-    navListsIcon:scale(0.09, 0.09)
-    local navText = display.newText(group, "Menu", 65, 23, "Museo Sans 300", 20) --navText is the menu text "Menu"
+    local navArrowIcon = display.newImage("images/navArrowIcon.png")
+    navArrowIcon.x, navArrowIcon.y =15, 23
+    navArrowIcon:scale(0.1, 0.1)
+    group:insert(navArrowIcon)
+    --    
+    --    local function onNavArrowTap()
+    --        storyboard.gotoScene("lists", {effect = "fromLeft"})
+    --    end
+    --    navArrowIcon:addEventListener("tap", onNavArrowTouch)
+    local navText = display.newText(group, "Lists", 50, 23, "Museo Sans 300", 20) --navText is the hierarchy text "Lists"
     navText:setFillColor(1,1,1)
-    local listNameText = display.newText(group, "Lists", constants.centerX, 23, "Museo Sans 300", 20) --listNameText is the title text Menu
-    listNameText:setFillColor(0,0,0)
     
---    local rowText
-    --Segmented Control
-    -- Listen for segmented control events      
-    local function onSegmentPress( event )
-        local target = event.target
---        if target.segmentNumber == 1 then
---            rowText = "Basic List"
---        else if target.segmentNumber == 2 then
---            rowText = "Task List"
---        else if target.segmentNumber == 3 then
---            rowText = "Grocery List"
---        end
---        end
---        end
-
-        print( "Segment Label is:", target.segmentLabel )
-        print( "Segment Number is:", target.segmentNumber )
-    end
+    local listName = "Groceries"
+    local listNameText = display.newText(group, listName, constants.centerX, 23, "Museo Sans 300", 20) -- listName Text is the name of the list. Example name is Groceries
+    listNameText:setFillColor(0,0,0) 
     
-    -- Create a default segmented control
-    local segmentedControl = widget.newSegmentedControl
-    {
-        left = constants.centerX - 125,
-        top = 75,
-        segmentWidth = 85,
-        segments = { "Basic Lists", "Task Lists", "Grocery Lists"},
-        defaultSegment = 2,
-        onPress = onSegmentPress
-    }
-    
-    --List (with no categories)
     local function onRowRender( event )
         
         -- Get reference to the row group
@@ -73,8 +50,26 @@ function scene:createScene( event )
         local rowHeight = row.contentHeight
         local rowWidth = row.contentWidth
         
-        local rowTitle = display.newText( row, "List "  .. row.index, 0, 0, "Museo Sans 300", 20 ) --"List"" will be "rowText"
-        rowTitle:setFillColor( 0 )
+        local rowTitle
+        local rowText
+        
+        if (row.isCategory) then
+            if row.index == 1 then
+                rowText = "CATEGORY 1"
+                rowTitle = display.newText(row, rowText, 0, 0, "Museo Sans 300", 20)
+                rowTitle.x = constants.leftPadding
+            else
+                rowText = "CATEGORY " .. row.index % 10 + 1
+                rowTitle = display.newText(row, rowText, 0, 0, "Museo Sans 300", 20) 
+                rowTitle.x = constants.leftPadding
+            end
+        else
+            rowText = "Task " .. row.index
+            rowTitle = display.newText(row, rowText, 0,0, "Museo Sans 300", 20)
+            rowTitle:setFillColor(0,0,0)
+            rowTitle.x = constants.leftPadding
+        end
+        
         
         -- Align the label left and vertically centered
         rowTitle.anchorX = 0
@@ -85,28 +80,48 @@ function scene:createScene( event )
     -- Create the widget
     local tableView = widget.newTableView
     {
-        left = 1,
-        top = 125,
+        left = 0,
+        top = 50,
         height = 440,
         width = 320,
+        hideScrollBar = true,
         onRowRender = onRowRender,
-        onRowTouch = onRowTouch,
-        listener = scrollListener
+        onRowTouch = onRowTouch
     }
     
+    group:insert( tableView )
+    
     -- Insert 40 rows
-    for i = 1, 2 do
+    for i = 1, 40 do
+        
+        -- default is that row isn't a category
+        --these are the white rows
+        isCategory = false
+        rowHeight = 36
+        rowColor = { default={1,1,1} }
+        
+        -- Make some rows categories
+        --these are the dark blues
+        if ( i == 1 or i % 11 == 0 ) then
+            isCategory = true
+            rowHeight = 50
+            rowColor = { default={constants.darkblue.r, constants.darkblue.g, constants.darkblue.b} }
+        end
+        
         -- Insert a row into the tableView
-          -- Insert a row into the tableView
         tableView:insertRow(
         {
-            isCategory = false,
-            rowHeight = 36,
-            rowColor = { default={1,1,1} },
+            isCategory = isCategory,
+            rowHeight = rowHeight,
+            rowColor = rowColor,
             lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
         }
         )
     end
+    local function onTap( event )
+        storyboard.gotoScene( "lists", {effect = "fromLeft"})
+    end
+    navArrowIcon:addEventListener( "tap", onTap )
 end
 
 -- Called BEFORE scene has moved onscreen:
@@ -118,9 +133,7 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
     local group = self.view
---    if listNameText != nil then
---        print "listNameText is not nil"
---    end
+    
 end
 
 -- Called when scene is about to move offscreen:
