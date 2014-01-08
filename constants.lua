@@ -46,4 +46,7 @@ constants.centerY = display.contentCenterY
 constants.leftPadding = {}
 constants.leftPadding = 10
 
+constants.defaultIconPlace = {}
+constants.defaultIconPlace.x = 15
+constants.defaultIconPlace.y = 23
 return constants

@@ -26,7 +26,7 @@ function scene:createScene( event )
     group:insert(navBar)
     
     local navArrowIcon = display.newImage("images/navArrowIcon.png")
-    navArrowIcon.x, navArrowIcon.y =15, 23
+    navArrowIcon.x, navArrowIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
     navArrowIcon:scale(0.1, 0.1)
     group:insert(navArrowIcon)
     --    
@@ -119,9 +119,11 @@ function scene:createScene( event )
         )
     end
     local function onTap( event )
+        event.target:removeEventListener("tap", onTap)
         storyboard.gotoScene( "lists", {effect = "fromLeft"})
     end
     navArrowIcon:addEventListener( "tap", onTap )
+    navText:addEventListener("tap", onTap)
 end
 
 -- Called BEFORE scene has moved onscreen:

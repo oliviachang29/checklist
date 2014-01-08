@@ -25,28 +25,30 @@ function scene:createScene( event )
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     group:insert(navBar)
     
-    local navListsIcon = display.newImage("images/navListsIcon.png")
-    navListsIcon.x, navListsIcon.y =20, 23
-    navListsIcon:scale(0.09, 0.09)
+    local toSideMenuIcon = display.newImage("images/toSideMenuIcon.png")
+    toSideMenuIcon.x, toSideMenuIcon.y = 20, constants.defaultIconPlace.y
+    toSideMenuIcon:scale(0.09, 0.09)
+    
     local navText = display.newText(group, "Menu", 65, 23, "Museo Sans 300", 20) --navText is the menu text "Menu"
     navText:setFillColor(1,1,1)
     local listNameText = display.newText(group, "Lists", constants.centerX, 23, "Museo Sans 300", 20) --listNameText is the title text Menu
     listNameText:setFillColor(0,0,0)
     
---    local rowText
     --Segmented Control
     -- Listen for segmented control events      
     local function onSegmentPress( event )
         local target = event.target
---        if target.segmentNumber == 1 then
---            rowText = "Basic List"
---        else if target.segmentNumber == 2 then
---            rowText = "Task List"
---        else if target.segmentNumber == 3 then
---            rowText = "Grocery List"
---        end
---        end
---        end
+        if target.segmentNumber == 1 then
+            rowText = "Basic List"
+        else if target.segmentNumber == 2 then
+            rowText = "Task List"
+        else if target.segmentNumber == 3 then
+            rowText = "Grocery List"
+        else
+            print("rowText not changing on segment press")
+        end
+        end
+        end
 
         print( "Segment Label is:", target.segmentLabel )
         print( "Segment Number is:", target.segmentNumber )
@@ -63,7 +65,7 @@ function scene:createScene( event )
         onPress = onSegmentPress
     }
     
-    --List (with no categories)
+    --LIST (with no categories)
     local function onRowRender( event )
         
         -- Get reference to the row group
@@ -73,7 +75,7 @@ function scene:createScene( event )
         local rowHeight = row.contentHeight
         local rowWidth = row.contentWidth
         
-        local rowTitle = display.newText( row, "List "  .. row.index, 0, 0, "Museo Sans 300", 20 ) --"List"" will be "rowText"
+        local rowTitle = display.newText( row, rowText  .. row.index, 0, 0, "Museo Sans 300", 20 ) --"List"" will be "rowText"
         rowTitle:setFillColor( 0 )
         
         -- Align the label left and vertically centered
