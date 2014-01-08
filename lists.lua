@@ -39,16 +39,18 @@ function scene:createScene( event )
     local function onSegmentPress( event )
         local target = event.target
         if target.segmentNumber == 1 then
-            rowText = "Basic List"
+            globals.listTitle = "Basic List"
         else if target.segmentNumber == 2 then
-            rowText = "Task List"
+            globals.listTitle = "Task List"
         else if target.segmentNumber == 3 then
-            rowText = "Grocery List"
+            globals.listTitle = "Grocery List"
         else
             print("rowText not changing on segment press")
         end
         end
         end
+        
+        globals.tableView:reloadData()
 
         print( "Segment Label is:", target.segmentLabel )
         print( "Segment Number is:", target.segmentNumber )
@@ -75,7 +77,7 @@ function scene:createScene( event )
         local rowHeight = row.contentHeight
         local rowWidth = row.contentWidth
         
-        local rowTitle = display.newText( row, rowText  .. row.index, 0, 0, "Museo Sans 300", 20 ) --"List"" will be "rowText"
+        local rowTitle = display.newText( row, globals.listTitle .. row.index, 0, 0, "Museo Sans 300", 20 ) --"List"" will be "rowText"
         rowTitle:setFillColor( 0 )
         
         -- Align the label left and vertically centered
@@ -85,7 +87,7 @@ function scene:createScene( event )
     end
     
     -- Create the widget
-    local tableView = widget.newTableView
+    globals.tableView = widget.newTableView
     {
         left = 1,
         top = 125,
@@ -100,7 +102,7 @@ function scene:createScene( event )
     for i = 1, 2 do
         -- Insert a row into the tableView
           -- Insert a row into the tableView
-        tableView:insertRow(
+        globals.tableView:insertRow(
         {
             isCategory = false,
             rowHeight = 36,
