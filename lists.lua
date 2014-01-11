@@ -63,7 +63,7 @@ function scene:createScene( event )
         top = 75,
         segmentWidth = 85,
         segments = { "Basic Lists", "Task Lists", "Grocery Lists"},
-        defaultSegment = 2,
+        defaultSegment = 1,
         onPress = onSegmentPress
     }
     
@@ -77,7 +77,7 @@ function scene:createScene( event )
         local rowHeight = row.contentHeight
         local rowWidth = row.contentWidth
         
-        local rowTitle = display.newText( row, globals.listTitle .. row.index, 0, 0, "Museo Sans 300", 20 ) --"List"" will be "rowText"
+        local rowTitle = display.newText( row, globals.listTitle.." " .. row.index, 0, 0, "Museo Sans 300", 20 ) --"List"" will be "rowText"
         rowTitle:setFillColor( 0 )
         
         -- Align the label left and vertically centered

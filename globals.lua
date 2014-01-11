@@ -6,7 +6,7 @@ local globals = {}
 
 globals.color = function(r,g,b) return (r/255), (g/255), (b/255); end
 
-globals.listTitle = "A title"
+globals.listTitle = "Basic List"
 
 globals.tableView = widget.newTableView
 
