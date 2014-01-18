@@ -19,7 +19,9 @@ storyboard.removeAll()
 ---------------------------------------------------------------------------------
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
+    
     local group = self.view
+    
     --Create navigation things
     local navBar = display.newRect(0, 0, 640, 100)
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
@@ -29,6 +31,7 @@ function scene:createScene( event )
     navArrowIcon.x, navArrowIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
     navArrowIcon:scale(0.1, 0.1)
     group:insert(navArrowIcon)
+    
     --    
     --    local function onNavArrowTap()
     --        storyboard.gotoScene("lists", {effect = "fromLeft"})
@@ -40,6 +43,7 @@ function scene:createScene( event )
     local listName = "Groceries"
     local listNameText = display.newText(group, listName, constants.centerX, 23, "Museo Sans 300", 20) -- listName Text is the name of the list. Example name is Groceries
     listNameText:setFillColor(0,0,0) 
+    
     
     local function onRowRender( event )
         
@@ -64,7 +68,8 @@ function scene:createScene( event )
                 rowTitle.x = constants.leftPadding
             end
         else
-            rowText = "Task " .. row.index
+            rowText = globals.listItems2[row.index]
+            
             rowTitle = display.newText(row, rowText, 0,0, "Museo Sans 300", 20)
             rowTitle:setFillColor(0,0,0)
             rowTitle.x = constants.leftPadding
@@ -90,6 +95,7 @@ function scene:createScene( event )
     }
     
     group:insert( tableView )
+
     
     -- Insert 40 rows
     for i = 1, 40 do
@@ -117,7 +123,11 @@ function scene:createScene( event )
             lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
         }
         )
+        
+        
+        
     end
+    
     local function onTap( event )
         event.target:removeEventListener("tap", onTap)
         storyboard.gotoScene( "lists", {effect = "fromLeft"})
