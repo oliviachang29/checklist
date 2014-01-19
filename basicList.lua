@@ -109,16 +109,21 @@ function scene:createScene( event )
     navArrowIcon:scale(0.1, 0.1)
     group:insert(navArrowIcon)
     
-    local navText = display.newText(group, "Lists", 50, 23, "Museo Sans 300", 20) --navText is the hierarchy text "Lists"
-    navText:setFillColor(1,1,1)
+    local leftText = display.newText(group, "Lists", 50, 23, "Museo Sans 300", 20) --navText is the hierarchy text "Lists"
+    leftText:setFillColor(1,1,1)
     
     local listName = "My List"
-    local listNameText = display.newText(group, listName, constants.centerX, 23, "Museo Sans 300", 20) -- listName Text is the name of the list. Example name is Groceries
-    listNameText:setFillColor(0,0,0) 
+    local middleText = display.newText(group, listName, constants.centerX, 23, "Museo Sans 300", 20) -- listName Text is the name of the list. Example name is Groceries
+    middleText:setFillColor(0,0,0) 
     
-    local navAddIcon = display.newImage("images/navAddIcon.png")
-    navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
-    group:insert(navAddIcon)
+    --    local navAddIcon = display.newImage("images/navAddIcon.png")
+    --    navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
+    --    group:insert(navAddIcon)
+    --    local function gotoNewTask()
+    --        storyboard.gotoScene( "newTask", {effect = "fromRight"})
+    --    end
+    --    
+    --    navAddIcon:addEventListener("tap", gotoNewTask)
     
     local function addToList()
         globals.basicListTableView:insertRow(
@@ -131,17 +136,60 @@ function scene:createScene( event )
         )
         globals.basicListTableView:reloadData()
         local lastRow = globals.basicListTableView:getNumRows()
-        globals.basicListTableView:scrollToIndex( lastRow, 300 )
-        --        tableView:scrollToIndex( 20, 800)
-        print("new row added to globals.basicListTableView")
+        globals.basicListTableView:scrollToIndex( lastRow, 400 )
+        print("new row added to globals.basicListTableView -" .. lastRow)
     end
-    navAddIcon:addEventListener("tap", addToList)
+    local beginX 
+    local beginY  
+    local endX  
+    local endY 
     
-    local function onTap( event )
+    local xDistance  
+    local yDistance  
+    
+    function checkSwipeDirection()
+        
+        xDistance =  math.abs(endX - beginX) -- math.abs will return the absolute value
+        yDistance =  math.abs(endY - beginY)
+        
+        if xDistance > yDistance then
+            if beginX > endX then
+                print("swipe left")
+            else 
+                print("swipe right")
+            end
+        else 
+            if beginY > endY then
+                print("swipe up")
+            else
+                addToList()
+                print("swipe down")
+            end
+        end
+        
+    end
+    
+    
+    function swipe(event)
+        if event.phase == "began" then
+            beginX = event.x
+            beginY = event.y
+        end
+        
+        if event.phase == "ended"  then
+            endX = event.x
+            endY = event.y
+            checkSwipeDirection();
+        end
+    end
+    
+    Runtime:addEventListener("touch", swipe)
+
+    local function gotoLists( event )
         storyboard.gotoScene( "lists", {effect = "fromLeft"})
     end
-    navArrowIcon:addEventListener( "tap", onTap )
-    navText:addEventListener("tap", onTap)
+    navArrowIcon:addEventListener( "tap", gotoLists )
+    leftText:addEventListener("tap", gotoLists)
 end
 
 -- Called BEFORE scene has moved onscreen:

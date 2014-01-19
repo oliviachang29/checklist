@@ -17,7 +17,48 @@ storyboard.removeAll()
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
         local group = self.view
-        
+        --Create navigation things
+    local navBar = display.newRect(0, 0, 640, 100)
+    navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
+    group:insert(navBar)
+    
+    local cancelIcon = display.newImage("images/cancelIcon.png")
+    cancelIcon.x, cancelIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
+    cancelIcon:scale(0.1, 0.1)
+    group:insert(cancelIcon)
+    
+    local leftText = display.newText(group, "Cancel", 65, 23, "Museo Sans 300", 20) --navText is the hierarchy text "Cancel"
+    leftText:setFillColor(1,1,1)
+    
+    local function gotoBasicList()
+        storyboard.gotoScene( "basicList", {effect = "fromLeft"})
+    end
+    cancelIcon:addEventListener("tap", gotoBasicList)
+    leftText:addEventListener("tap", gotoBasicList)
+    local middleText = display.newText(group, "New Task", constants.centerX + 25, 23, "Museo Sans 300", 20)
+    middleText:setFillColor(0,0,0) 
+    
+    local checkIcon = display.newImage("images/checkIcon.png")
+    checkIcon.x, checkIcon.y = constants.centerX + 125, 23
+    group:insert(checkIcon)
+    
+    local function addToList()
+        storyboard.gotoScene( "basicList", {effect = "fromLeft"})
+        globals.basicListTableView:insertRow(
+        {
+            isCategory = false,
+            rowHeight = 36,
+            rowColor = { default={1,1,1} },
+            lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
+        }
+        )
+        globals.basicListTableView:reloadData()
+        local lastRow = globals.basicListTableView:getNumRows()
+        globals.basicListTableView:scrollToIndex( lastRow, 400 )
+        print("new row added to globals.basicListTableView -" .. lastRow)
+    
+    end
+    checkIcon:addEventListener("tap", addToList)
 end
 
 
