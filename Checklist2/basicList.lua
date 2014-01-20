@@ -19,7 +19,6 @@ function scene:createScene( event )
     
     local group = self.view
     
-    --put the sidebar here, so that it is under the list & nav
     
     local function onRowRender( event )
         
@@ -36,17 +35,17 @@ function scene:createScene( event )
         if (row.isCategory) then
             if row.index == 1 then
                 rowText = "CATEGORY 1"
-                rowTitle = display.newText(row, rowText, 0, 0, globals.font.regular, 20)
+                rowTitle = display.newText(row, rowText, 0, 0, "Museo Sans 300", 20)
                 rowTitle.x = constants.leftPadding
             else
                 rowText = "CATEGORY " .. row.index % 10 + 1
-                rowTitle = display.newText(row, rowText, 0, 0, globals.font.regular, 20) 
+                rowTitle = display.newText(row, rowText, 0, 0, "Museo Sans 300", 20) 
                 rowTitle.x = constants.leftPadding
             end
         else
             rowText = "Task " --globals.listItems2[row.index]
             
-            rowTitle = display.newText(row, rowText .. row.index, 0,0, globals.font.regular, 20)
+            rowTitle = display.newText(row, rowText .. row.index, 0,0, "Museo Sans 300", 20)
             rowTitle:setFillColor(0,0,0)
             rowTitle.x = constants.leftPadding
         end
@@ -81,14 +80,14 @@ function scene:createScene( event )
         rowHeight = 36
         rowColor = { default={1,1,1} }
         
-        -- Make some rows categories
-        --these are the dark blues
-        if ( i == 1 or i % 11 == 0 ) then
-            isCategory = true
-            rowHeight = 50
-            rowColor = { default={constants.darkblue.r, constants.darkblue.g, constants.darkblue.b} }
-        end
-        
+        --        -- Make some rows categories
+        --        --these are the dark blues
+        --        if ( i == 1 or i % 11 == 0 ) then
+        --            isCategory = true
+        --            rowHeight = 50
+        --            rowColor = { default={constants.darkblue.r, constants.darkblue.g, constants.darkblue.b} }
+        --        end
+        --        
         -- Insert a row into the tableView
         globals.basicListTableView:insertRow(
         {
@@ -105,12 +104,16 @@ function scene:createScene( event )
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     group:insert(navBar)
     
-    local toSideMenuIcon = display.newImage("images/toSideMenuIcon.png")
-    toSideMenuIcon.x, toSideMenuIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
-    group:insert(toSideMenuIcon)
+    local navArrowIcon = display.newImage("images/navArrowIcon.png")
+    navArrowIcon.x, navArrowIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
+    navArrowIcon:scale(0.1, 0.1)
+    group:insert(navArrowIcon)
     
-    local listName = "To Do"
-    local middleText = display.newText(group, listName, constants.centerX, 23, globals.font.regular, 20) -- middleText is the name of the list. It is in the middle
+    local leftText = display.newText(group, "Lists", 50, 23, "Museo Sans 300", 20) --navText is the hierarchy text "Lists"
+    leftText:setFillColor(1,1,1)
+    
+    local listName = "My List"
+    local middleText = display.newText(group, listName, constants.centerX, 23, "Museo Sans 300", 20) -- listName Text is the name of the list. Example name is Groceries
     middleText:setFillColor(0,0,0) 
     
     --    local navAddIcon = display.newImage("images/navAddIcon.png")
@@ -146,20 +149,20 @@ function scene:createScene( event )
     
     function checkSwipeDirection()
         
-        xDistance =  math.abs(endX - beginX) -- math.abs will return the absolute, or non-negative value, of a given value. 
+        xDistance =  math.abs(endX - beginX) -- math.abs will return the absolute value
         yDistance =  math.abs(endY - beginY)
         
         if xDistance > yDistance then
             if beginX > endX then
                 print("swipe left")
-            else
-                --if swipe right, then pull out side menu
+            else 
                 print("swipe right")
             end
         else 
             if beginY > endY then
                 print("swipe up")
-            else 
+            else
+                addToList()
                 print("swipe down")
             end
         end
@@ -181,12 +184,12 @@ function scene:createScene( event )
     end
     
     Runtime:addEventListener("touch", swipe)
-    
-    local function gotoSideMenu( )
-        --open sideMenu
+
+    local function gotoLists( event )
+        storyboard.gotoScene( "lists", {effect = "fromLeft"})
     end
-    --    toSideMenuIcon:addEventListener("tap", gotoSideMenu)
-    
+    navArrowIcon:addEventListener( "tap", gotoLists )
+    leftText:addEventListener("tap", gotoLists)
 end
 
 -- Called BEFORE scene has moved onscreen:

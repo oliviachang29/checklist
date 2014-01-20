@@ -15,13 +15,12 @@ end
 -- TESTING: Can we save the listItems table as json file?
 saveTable(listItems,"listitems.json")
 
+
 local globals = {}
 
-globals.font = 
-{
-  regular = "Museo Sans 300",
-  bold = "Museo Sans 500",
-}
+globals.color = function(r,g,b) return (r/255), (g/255), (b/255); end
+
+globals.listTitle = "List"
 
 globals.tableView = widget.newTableView
 globals.basicListTableView = widget.newTableView
