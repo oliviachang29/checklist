@@ -1,5 +1,4 @@
 --Constants
-local globals = require("globals")
 
 --make sure to make "constants.whatever = {}"" (into a table) before you make it something else, or it won't work'
 --constants

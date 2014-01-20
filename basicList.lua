@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 --basicList.lua
 --(c) 2014 Olivia Chang
 
@@ -266,5 +267,3 @@ scene:addEventListener( "overlayEnded", scene )
 ---------------------------------------------------------------------------------
 
 return scene
-
-

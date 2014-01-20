@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> f9ce2a37891808546276a72d765583b16d7ec541
 Add designed by Jardson A.
