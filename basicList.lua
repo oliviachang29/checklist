@@ -14,36 +14,12 @@ storyboard.removeAll()
 
 -- local forward references should go here --
 
----------------------------------------------------------------------------------
--- BEGINNING OF YOUR IMPLEMENTATION
----------------------------------------------------------------------------------
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
     
     local group = self.view
     
-    --Create navigation things
-    local navBar = display.newRect(0, 0, 640, 100)
-    navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
-    group:insert(navBar)
-    
-    local navArrowIcon = display.newImage("images/navArrowIcon.png")
-    navArrowIcon.x, navArrowIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
-    navArrowIcon:scale(0.1, 0.1)
-    group:insert(navArrowIcon)
-    
-    --    
-    --    local function onNavArrowTap()
-    --        storyboard.gotoScene("lists", {effect = "fromLeft"})
-    --    end
-    --    navArrowIcon:addEventListener("tap", onNavArrowTouch)
-    local navText = display.newText(group, "Lists", 50, 23, "Museo Sans 300", 20) --navText is the hierarchy text "Lists"
-    navText:setFillColor(1,1,1)
-    
-    local listName = "Groceries"
-    local listNameText = display.newText(group, listName, constants.centerX, 23, "Museo Sans 300", 20) -- listName Text is the name of the list. Example name is Groceries
-    listNameText:setFillColor(0,0,0) 
-    
+    --put the sidebar here, so that it is under the list & nav
     
     local function onRowRender( event )
         
@@ -60,21 +36,20 @@ function scene:createScene( event )
         if (row.isCategory) then
             if row.index == 1 then
                 rowText = "CATEGORY 1"
-                rowTitle = display.newText(row, rowText, 0, 0, "Museo Sans 300", 20)
+                rowTitle = display.newText(row, rowText, 0, 0, globals.font.regular, 20)
                 rowTitle.x = constants.leftPadding
             else
                 rowText = "CATEGORY " .. row.index % 10 + 1
-                rowTitle = display.newText(row, rowText, 0, 0, "Museo Sans 300", 20) 
+                rowTitle = display.newText(row, rowText, 0, 0, globals.font.regular, 20) 
                 rowTitle.x = constants.leftPadding
             end
         else
-            rowText = globals.listItems2[row.index]
+            rowText = "Task " --globals.listItems2[row.index]
             
-            rowTitle = display.newText(row, rowText, 0,0, "Museo Sans 300", 20)
+            rowTitle = display.newText(row, rowText .. row.index, 0,0, globals.font.regular, 20)
             rowTitle:setFillColor(0,0,0)
             rowTitle.x = constants.leftPadding
         end
-        
         
         -- Align the label left and vertically centered
         rowTitle.anchorX = 0
@@ -83,7 +58,7 @@ function scene:createScene( event )
     end
     
     -- Create the widget
-    local tableView = widget.newTableView
+    globals.basicListTableView = widget.newTableView
     {
         left = 0,
         top = 50,
@@ -94,8 +69,8 @@ function scene:createScene( event )
         onRowTouch = onRowTouch
     }
     
-    group:insert( tableView )
-
+    group:insert( globals.basicListTableView )
+    
     
     -- Insert 40 rows
     for i = 1, 40 do
@@ -115,7 +90,7 @@ function scene:createScene( event )
         end
         
         -- Insert a row into the tableView
-        tableView:insertRow(
+        globals.basicListTableView:insertRow(
         {
             isCategory = isCategory,
             rowHeight = rowHeight,
@@ -124,16 +99,94 @@ function scene:createScene( event )
         }
         )
         
+    end
+    --Create navigation things
+    local navBar = display.newRect(0, 0, 640, 100)
+    navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
+    group:insert(navBar)
+    
+    local toSideMenuIcon = display.newImage("images/toSideMenuIcon.png")
+    toSideMenuIcon.x, toSideMenuIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
+    group:insert(toSideMenuIcon)
+    
+    local listName = "To Do"
+    local middleText = display.newText(group, listName, constants.centerX, 23, globals.font.regular, 20) -- middleText is the name of the list. It is in the middle
+    middleText:setFillColor(0,0,0) 
+    
+    --    local navAddIcon = display.newImage("images/navAddIcon.png")
+    --    navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
+    --    group:insert(navAddIcon)
+    --    local function gotoNewTask()
+    --        storyboard.gotoScene( "newTask", {effect = "fromRight"})
+    --    end
+    --    
+    --    navAddIcon:addEventListener("tap", gotoNewTask)
+    
+    local function addToList()
+        globals.basicListTableView:insertRow(
+        {
+            isCategory = false,
+            rowHeight = 36,
+            rowColor = { default={1,1,1} },
+            lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
+        }
+        )
+        globals.basicListTableView:reloadData()
+        local lastRow = globals.basicListTableView:getNumRows()
+        globals.basicListTableView:scrollToIndex( lastRow, 400 )
+        print("new row added to globals.basicListTableView -" .. lastRow)
+    end
+    local beginX 
+    local beginY  
+    local endX  
+    local endY 
+    
+    local xDistance  
+    local yDistance  
+    
+    function checkSwipeDirection()
         
+        xDistance =  math.abs(endX - beginX) -- math.abs will return the absolute, or non-negative value, of a given value. 
+        yDistance =  math.abs(endY - beginY)
+        
+        if xDistance > yDistance then
+            if beginX > endX then
+                print("swipe left")
+            else
+                --if swipe right, then pull out side menu
+                print("swipe right")
+            end
+        else 
+            if beginY > endY then
+                print("swipe up")
+            else 
+                print("swipe down")
+            end
+        end
         
     end
     
-    local function onTap( event )
-        event.target:removeEventListener("tap", onTap)
-        storyboard.gotoScene( "lists", {effect = "fromLeft"})
+    
+    function swipe(event)
+        if event.phase == "began" then
+            beginX = event.x
+            beginY = event.y
+        end
+        
+        if event.phase == "ended"  then
+            endX = event.x
+            endY = event.y
+            checkSwipeDirection();
+        end
     end
-    navArrowIcon:addEventListener( "tap", onTap )
-    navText:addEventListener("tap", onTap)
+    
+    Runtime:addEventListener("touch", swipe)
+    
+    local function gotoSideMenu( )
+        --open sideMenu
+    end
+    --    toSideMenuIcon:addEventListener("tap", gotoSideMenu)
+    
 end
 
 -- Called BEFORE scene has moved onscreen:
