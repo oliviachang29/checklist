@@ -23,11 +23,24 @@ globals.font =
   bold = "Museo Sans 500",
 }
 
-globals.tableView = widget.newTableView
 globals.basicListTableView = widget.newTableView
-
+globals.listsTableView = widget.newTableView
 -- TESTING: Can we load the listItems2 table from a json file?
 globals.listItems2 = loadTable("listitems.json")
 
+function globals.createSideBar()
+    local sideBackground = display.newRect(0, 0, 550, 1000)
+    sideBackground:setFillColor(0.93333333333, 0.93333333333, 0.93333333333)
+    sideBackground:toBack()
+    
+    --to do icon and how many to do - this needs to be in the list
+    local toDoIcon = display.newImage("images/toDoIcon.png")
+    toDoIcon.x, toDoIcon.y = x, y
+    group:insert(toDoIcon)
+    
+    local toDoText = display.newText(group, rowText, 0, 0, globals.font.regular, 20)
+    --list of lists
+    --settings
+end
 
 return globals

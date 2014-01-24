@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 --basicList.lua
 --(c) 2014 Olivia Chang
 
@@ -13,14 +12,16 @@ local scene = storyboard.newScene()
 -- Clear previous scene
 storyboard.removeAll()
 
--- local forward references should go here --
+-- local forward references should go here --globals
 
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
     
     local group = self.view
     
-    --put the sidebar here, so that it is under the list & nav
+  
+    local listGroup = display.newGroup()
+    group:insert(listGroup)
     
     local function onRowRender( event )
         
@@ -70,7 +71,7 @@ function scene:createScene( event )
         onRowTouch = onRowTouch
     }
     
-    group:insert( globals.basicListTableView )
+    listGroup:insert( globals.basicListTableView )
     
     
     -- Insert 40 rows
@@ -102,26 +103,23 @@ function scene:createScene( event )
         
     end
     --Create navigation things
+    
     local navBar = display.newRect(0, 0, 640, 100)
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
-    group:insert(navBar)
+    listGroup:insert(navBar)
     
     local toSideMenuIcon = display.newImage("images/toSideMenuIcon.png")
     toSideMenuIcon.x, toSideMenuIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
-    group:insert(toSideMenuIcon)
+    listGroup:insert(toSideMenuIcon)
     
     local listName = "To Do"
-    local middleText = display.newText(group, listName, constants.centerX, 23, globals.font.regular, 20) -- middleText is the name of the list. It is in the middle
+    local middleText = display.newText(listGroup, listName, constants.centerX, 23, globals.font.regular, 20) -- middleText is the name of the list. It is in the middle
     middleText:setFillColor(0,0,0) 
     
-    --    local navAddIcon = display.newImage("images/navAddIcon.png")
-    --    navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
-    --    group:insert(navAddIcon)
-    --    local function gotoNewTask()
-    --        storyboard.gotoScene( "newTask", {effect = "fromRight"})
-    --    end
-    --    
-    --    navAddIcon:addEventListener("tap", gotoNewTask)
+    local navAddIcon = display.newImage("images/navAddIcon.png")
+    navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
+    listGroup:insert(navAddIcon)
+    
     
     local function addToList()
         globals.basicListTableView:insertRow(
@@ -135,58 +133,86 @@ function scene:createScene( event )
         globals.basicListTableView:reloadData()
         local lastRow = globals.basicListTableView:getNumRows()
         globals.basicListTableView:scrollToIndex( lastRow, 400 )
-        print("new row added to globals.basicListTableView -" .. lastRow)
-    end
-    local beginX 
-    local beginY  
-    local endX  
-    local endY 
-    
-    local xDistance  
-    local yDistance  
-    
-    function checkSwipeDirection()
-        
-        xDistance =  math.abs(endX - beginX) -- math.abs will return the absolute, or non-negative value, of a given value. 
-        yDistance =  math.abs(endY - beginY)
-        
-        if xDistance > yDistance then
-            if beginX > endX then
-                print("swipe left")
-            else
-                --if swipe right, then pull out side menu
-                print("swipe right")
-            end
-        else 
-            if beginY > endY then
-                print("swipe up")
-            else 
-                print("swipe down")
-            end
-        end
-        
+        print("row ".. lastRow .." added to globals.basicListTableView")
     end
     
+    navAddIcon:addEventListener("tap", addToList)
     
-    function swipe(event)
-        if event.phase == "began" then
-            beginX = event.x
-            beginY = event.y
-        end
-        
-        if event.phase == "ended"  then
-            endX = event.x
-            endY = event.y
-            checkSwipeDirection();
-        end
-    end
-    
-    Runtime:addEventListener("touch", swipe)
+      --put the sidebar here, so that it is under the list & nav
+    local sideBarGroup = display.newGroup()
+    group:insert(sideBarGroup)
+    local tasksToDoIcon = display.newImage("images/tasksToDoIcon.png")
+    sideBarGroup:insert(tasksToDoIcon)
+    tasksToDoIcon.x, tasksToDoIcon.y = constants.centerX - 30, 65
+
+    local tasksToDoText = display.newText(sideBarGroup, "To Do: \n    "..globals.basicListTableView:getNumRows(),constants.centerX - 20, 150, globals.font.regular, 20)
+    tasksToDoText:setFillColor(0,0,0)
+
+    sideBarGroup:toBack()
+    --    local beginX 
+    --    local beginY  
+    --    local endX  
+    --    local endY 
+    --    
+    --    local xDistance  
+    --    local yDistance  
+    --    
+    --    function checkSwipeDirection()
+    --        
+    --        xDistance =  math.abs(endX - beginX) -- math.abs will return the absolute, or non-negative value, of a given value. 
+    --        yDistance =  math.abs(endY - beginY)
+    --        
+    --        if xDistance > yDistance then
+    --            if beginX > endX then
+    --                print("swipe left")
+    --            else
+    --                --if swipe right, then pull out side menu
+    --                print("swipe right")
+    --            end
+    --        else 
+    --            if beginY > endY then
+    --                print("swipe up")
+    --            else 
+    --                print("swipe down")
+    --            end
+    --        end
+    --        
+    --    end
+    --    
+    --    
+    --    function swipe(event)
+    --        if event.phase == "began" then
+    --            beginX = event.x
+    --            beginY = event.y
+    --        end
+    --        
+    --        if event.phase == "ended"  then
+    --            endX = event.x
+    --            endY = event.y
+    --            checkSwipeDirection();
+    --        end
+    --    end
+    --    
+    --    Runtime:addEventListener("touch", swipe)
     
     local function gotoSideMenu( )
+        local function toFront()
+            sideBarGroup:toFront()
+        end
         --open sideMenu
+        transition.to(listGroup, {time = 300, x = constants.centerX + 100, onComplete = toFront})
+        print("Side Menu Opened.")
+        
+        
+        --        local function outOfSideMenu()
+        --            transition.to(listGroup, {time = 500, x = 0})
+        --            navBar:removeEventListener("tap", outOfSideMenu)
+        --            print("Side Menu Closed.")
+        --        end
+        --        navBar:addEventListener("tap", outOfSideMenu)
     end
-    --    toSideMenuIcon:addEventListener("tap", gotoSideMenu)
+    
+    toSideMenuIcon:addEventListener("tap", gotoSideMenu)
     
 end
 
