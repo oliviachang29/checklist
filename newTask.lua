@@ -43,6 +43,7 @@ function scene:createScene( event )
     group:insert(checkIcon)
     
     local function addToList()
+        globals.numRowsBasicList = globals.numRowsBasicList + 1
         storyboard.gotoScene( "basicList", {effect = "fromLeft"})
         globals.basicListTableView:insertRow(
         {
@@ -54,8 +55,8 @@ function scene:createScene( event )
         )
         globals.basicListTableView:reloadData()
         local lastRow = globals.basicListTableView:getNumRows()
-        globals.basicListTableView:scrollToIndex( lastRow, 400 )
-        print("new row added to globals.basicListTableView -" .. lastRow)
+        globals.basicListTableView:scrollToIndex( globals.numRowsBasicList - 1, 700)
+        print("new row added to globals.basicListTableView -" .. globals.numRowsBasicList)
     
     end
     checkIcon:addEventListener("tap", addToList)

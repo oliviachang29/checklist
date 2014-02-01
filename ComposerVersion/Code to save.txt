@@ -1,0 +1,29 @@
+<<<<<<< HEAD
+----parse
+--local parse = require( "mod_parse" )
+--parse:init({ 
+--  appId = "lDLHxGHvxTjF3taXb2mX423O6zG98AccFdd7x2QF", 
+--  apiKey = "qk49urZvNxfJhd32yF2QDY3RDjyvfUvz2PtOOLaN"
+--})
+--
+--parse.showStatus = true
+----create user listener
+--local function onCreateUser( event )
+--  print( event.response.createdAt )
+--  print( event.response.sessionToken )
+--end
+=======
+----parse
+--local parse = require( "mod_parse" )
+--parse:init({ 
+--  appId = "lDLHxGHvxTjF3taXb2mX423O6zG98AccFdd7x2QF", 
+--  apiKey = "qk49urZvNxfJhd32yF2QDY3RDjyvfUvz2PtOOLaN"
+--})
+--
+--parse.showStatus = true
+----create user listener
+--local function onCreateUser( event )
+--  print( event.response.createdAt )
+--  print( event.response.sessionToken )
+--end
+>>>>>>> f9ce2a37891808546276a72d765583b16d7ec541

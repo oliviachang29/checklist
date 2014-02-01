@@ -42,9 +42,8 @@ function scene:createScene( event )
     checkIcon.x, checkIcon.y = constants.centerX + 125, 23
     group:insert(checkIcon)
     
-    newTaskTextField = native.newTextField( centerX, 100, 640, 50 )
+    --local newTaskTextField = native.newTextField( centerX, 100, 640, 50 )
 
-    
     local function addToList()
         storyboard.gotoScene( "basicList", {effect = "fromLeft"})
         globals.basicListTableView:insertRow(
