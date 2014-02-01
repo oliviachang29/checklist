@@ -3,7 +3,7 @@
 require "CiderDebugger";
 
 display.setStatusBar(display.HiddenStatusBar)
-system.activate( "multitouch" )
+--system.activate( "multitouch" )
 
 local storyboard = require("storyboard") --so it can go to scenes
 

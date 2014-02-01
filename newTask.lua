@@ -45,17 +45,7 @@ function scene:createScene( event )
     local function addToList()
         globals.numRowsBasicList = globals.numRowsBasicList + 1
         storyboard.gotoScene( "basicList", {effect = "fromLeft"})
-        globals.basicListTableView:insertRow(
-        {
-            isCategory = false,
-            rowHeight = 36,
-            rowColor = { default={1,1,1} },
-            lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
-        }
-        )
-        globals.basicListTableView:reloadData()
-        local lastRow = globals.basicListTableView:getNumRows()
-        globals.basicListTableView:scrollToIndex( globals.numRowsBasicList - 1, 700)
+        globals.basicListTableView:scrollToIndex(globals.numRowsBasicList, 700)
         print("new row added to globals.basicListTableView -" .. globals.numRowsBasicList)
     
     end

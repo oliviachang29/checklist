@@ -74,7 +74,7 @@ function scene:createScene( event )
     listGroup:insert( globals.basicListTableView )
     
     
-    -- Insert 40 rows
+    -- Insert globals.numRowsBasicList rows
     for i = 1, globals.numRowsBasicList do
         
         -- default is that row isn't a category
