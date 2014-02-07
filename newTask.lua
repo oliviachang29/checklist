@@ -16,8 +16,8 @@ storyboard.removeAll()
 
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
-        local group = self.view
-        --Create navigation things
+    local group = self.view
+    --Create navigation things
     local navBar = display.newRect(0, 0, 640, 100)
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     group:insert(navBar)
@@ -42,41 +42,66 @@ function scene:createScene( event )
     checkIcon.x, checkIcon.y = constants.centerX + 125, 23
     group:insert(checkIcon)
     
-    local function addToList()
-        globals.numRowsBasicList = globals.numRowsBasicList + 1
-        storyboard.gotoScene( "basicList", {effect = "fromLeft"})
-        globals.basicListTableView:scrollToIndex(globals.numRowsBasicList, 700)
-        print("new row added to globals.basicListTableView -" .. globals.numRowsBasicList)
+    local taskNameField = native.newTextField( 160, 100, 240, 50)
+    group:insert(taskNameField)
+    native.setKeyboardFocus( taskNameField )
+    local categoryText = display.newText(group, "Category?", 75, 150, "Museo Sans 300", 20)
+    categoryText:setFillColor(0,0,0)
+    -- Handle press events for the checkbox
+    local function onSwitchPress( event )
+        local switch = event.target
+        print( "Switch with ID '"..switch.id.."' is on: "..tostring(switch.isOn) )
+    end
     
+    -- Create onOffSwitch
+    local onOffSwitch = widget.newSwitch
+    {
+        left = 250,
+        top = 130,
+        style = "onOff",
+        id = "onOffSwitch",
+        onPress = onSwitchPress
+    }
+    group:insert(onOffSwitch)
+    
+    local function addToList()
+        globals.basicListT.numRows = globals.basicListT.numRows + 1
+        saveTable(basicListT, "basiclistt.json")
+        storyboard.gotoScene( "basicList", {effect = "fromLeft"})
+        globals.basicListTableView:scrollToIndex(globals.basicListT.numRows, 700)
+        print("new row added to globals.basicListTableView -" .. globals.basicListT.numRows)
+        
     end
     checkIcon:addEventListener("tap", addToList)
+    
+    
 end
 
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
-        local group = self.view
-
-        --      INSERT code here (e.g. start timers, load audio, start listeners, etc.)
-
+    local group = self.view
+    
+    --      INSERT code here (e.g. start timers, load audio, start listeners, etc.)
+    
 end
 
 
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
-        local group = self.view
-
-        --      INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
-
+    local group = self.view
+    
+    --      INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
+    
 end
 
 
 -- Called prior to the removal of scene's "view" (display group)
 function scene:destroyScene( event )
-        local group = self.view
-
-        --      INSERT code here (e.g. remove listeners, widgets, save state, etc.)
-
+    local group = self.view
+    native.setKeyboardFocus(nil)
+    --      INSERT code here (e.g. remove listeners, widgets, save state, etc.)
+    
 end
 
 

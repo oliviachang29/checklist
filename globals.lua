@@ -27,7 +27,6 @@ globals.font =
 
 --for basiclist
 globals.basicListTableView = widget.newTableView
-globals.numRowsBasicList = 0 -- since it is an empty list
 
 -- TESTING: Can we load the listItems2 table from a json file?
 globals.listItems2 = loadTable("listitems.json")

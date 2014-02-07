@@ -74,8 +74,8 @@ function scene:createScene( event )
     listGroup:insert( globals.basicListTableView )
     
     
-    -- Insert globals.numRowsBasicList rows
-    for i = 1, globals.numRowsBasicList do
+    -- Insert globals.basicListT.numRows rows
+    for i = 1, globals.basicListT.numRows do
         
         -- default is that row isn't a category
         --these are the white rows
@@ -120,22 +120,7 @@ function scene:createScene( event )
     navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
     listGroup:insert(navAddIcon)
     
-    
-    local function addToList()
-        globals.basicListTableView:insertRow(
-        {
-            isCategory = false,
-            rowHeight = 36,
-            rowColor = { default={1,1,1} },
-            lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
-        }
-        )
-        globals.basicListTableView:reloadData()
-        local lastRow = globals.basicListTableView:getNumRows()
-        globals.basicListTableView:scrollToIndex( lastRow, 400 )
-        print("row ".. lastRow .." added to globals.basicListTableView")
-    end
-    
+
     local function gotoNewTask()
         storyboard.gotoScene("newTask", {effect = "fromRight"})
     end
