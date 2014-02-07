@@ -43,6 +43,9 @@ function scene:createScene( event )
     group:insert(checkIcon)
     
     local taskNameField = native.newTextField( 160, 100, 240, 50)
+
+    taskNameField:addEventListener("userInput",taskNameField)
+    
     group:insert(taskNameField)
     native.setKeyboardFocus( taskNameField )
     local categoryText = display.newText(group, "Category?", 75, 150, "Museo Sans 300", 20)
@@ -73,6 +76,23 @@ function scene:createScene( event )
         
     end
     checkIcon:addEventListener("tap", addToList)
+    
+    
+
+    
+    local function getListName(event)
+        if  ( event.phase == "editing" ) then
+         
+             itemName = event.target.text        
+             print(itemName)
+
+        elseif ( event.phase == "ended" ) then
+    	
+             itemName = event.target.text     
+             print(itemName)
+             native.setKeyboardFocus( nil )
+        end
+    end
     
     
 end

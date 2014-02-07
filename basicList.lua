@@ -114,6 +114,7 @@ function scene:createScene( event )
     
     local listName = "To Do"
     local middleText = display.newText(listGroup, listName, constants.centerX, 23, globals.font.regular, 20) -- middleText is the name of the list. It is in the middle
+
     middleText:setFillColor(0,0,0) 
     
     local navAddIcon = display.newImage("images/navAddIcon.png")
