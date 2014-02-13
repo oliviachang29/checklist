@@ -1,0 +1,20 @@
+        if globals.basicListT.numRows > 7 then
+            globals.basicListTableView:scrollToIndex(globals.basicListT.numRows, 700)
+        end
+
+        if switch.isOn == true then
+            rHeight = 40
+            rColor = {constants.darkblue.r, constants.darkblue.g, constants.darkblue.b}
+        else
+            rHeight = 36
+            rColor = { default={1,1,1} }
+        end
+        -- Insert a row into the tableView
+        globals.basicListTableView:insertRow(
+        {
+            isCategory = switch.isOn,
+            rowHeight = rHeight,
+            rowColor = rColor,
+            lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
+        }
+        )

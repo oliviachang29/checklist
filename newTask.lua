@@ -48,10 +48,9 @@ function scene:createScene( event )
     
     group:insert(taskNameField)
     native.setKeyboardFocus( taskNameField )
-    local categoryText = display.newText(group, "Category?", 75, 150, "Museo Sans 300", 20)
-    categoryText:setFillColor(0,0,0)
-    -- Handle press events for the checkbox
-    local function onSwitchPress( event )
+       
+       -- Handle press events for the checkbox
+   local function onSwitchPress( event )
         local switch = event.target
         print( "Switch with ID '"..switch.id.."' is on: "..tostring(switch.isOn) )
     end
@@ -71,14 +70,15 @@ function scene:createScene( event )
         globals.basicListT.numRows = globals.basicListT.numRows + 1
         saveTable(basicListT, "basiclistt.json")
         storyboard.gotoScene( "basicList", {effect = "fromLeft"})
-        globals.basicListTableView:scrollToIndex(globals.basicListT.numRows, 700)
+        if globals.basicListT.numRows > 7 then
+            globals.basicListTableView:scrollToIndex(globals.basicListT.numRows, 700)
+        end
         print("new row added to globals.basicListTableView -" .. globals.basicListT.numRows)
         
     end
     checkIcon:addEventListener("tap", addToList)
-    
-    
-
+     local categoryText = display.newText(group, "Category?", 75, 150, "Museo Sans 300", 20)
+    categoryText:setFillColor(0,0,0)
     
     local function getListName(event)
         if  ( event.phase == "editing" ) then
@@ -90,7 +90,6 @@ function scene:createScene( event )
     	
              itemName = event.target.text     
              print(itemName)
-             native.setKeyboardFocus( nil )
         end
     end
     
