@@ -48,9 +48,10 @@ function scene:createScene( event )
     
     group:insert(taskNameField)
     native.setKeyboardFocus( taskNameField )
-       
-       -- Handle press events for the checkbox
-   local function onSwitchPress( event )
+    local categoryText = display.newText(group, "Category?", 75, 150, "Museo Sans 300", 20)
+    categoryText:setFillColor(0,0,0)
+    -- Handle press events for the checkbox
+    local function onSwitchPress( event )
         local switch = event.target
         print( "Switch with ID '"..switch.id.."' is on: "..tostring(switch.isOn) )
     end
@@ -77,8 +78,9 @@ function scene:createScene( event )
         
     end
     checkIcon:addEventListener("tap", addToList)
-     local categoryText = display.newText(group, "Category?", 75, 150, "Museo Sans 300", 20)
-    categoryText:setFillColor(0,0,0)
+    
+    
+
     
     local function getListName(event)
         if  ( event.phase == "editing" ) then
@@ -90,6 +92,7 @@ function scene:createScene( event )
     	
              itemName = event.target.text     
              print(itemName)
+             native.setKeyboardFocus( nil )
         end
     end
     

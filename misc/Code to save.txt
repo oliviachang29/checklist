@@ -1,6 +1,4 @@
-        if globals.basicListT.numRows > 7 then
-            globals.basicListTableView:scrollToIndex(globals.basicListT.numRows, 700)
-        end
+
 
         if switch.isOn == true then
             rHeight = 40
