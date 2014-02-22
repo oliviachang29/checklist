@@ -2,8 +2,8 @@
 --(c) 2014 Olivia Chang
 
 --Require
-local widget = require( "widget" ) --widgets supplied by corona
-local globals = require("globals") --globals.lua
+local widget = require( "widget" ) --widgets supplied by corona, not in a file
+local globals = require("globals")
 local constants = require("constants")
 local storyboard = require("storyboard")
 
@@ -138,70 +138,34 @@ function scene:createScene( event )
     tasksToDoText:setFillColor(0,0,0)
 
     sideBarGroup:toBack()
-    --    local beginX 
-    --    local beginY  
-    --    local endX  
-    --    local endY 
-    --    
-    --    local xDistance  
-    --    local yDistance  
-    --    
-    --    function checkSwipeDirection()
-    --        
-    --        xDistance =  math.abs(endX - beginX) -- math.abs will return the absolute, or non-negative value, of a given value. 
-    --        yDistance =  math.abs(endY - beginY)
-    --        
-    --        if xDistance > yDistance then
-    --            if beginX > endX then
-    --                print("swipe left")
-    --            else
-    --                --if swipe right, then pull out side menu
-    --                print("swipe right")
-    --            end
-    --        else 
-    --            if beginY > endY then
-    --                print("swipe up")
-    --            else 
-    --                print("swipe down")
-    --            end
-    --        end
-    --        
-    --    end
-    --    
-    --    
-    --    function swipe(event)
-    --        if event.phase == "began" then
-    --            beginX = event.x
-    --            beginY = event.y
-    --        end
-    --        
-    --        if event.phase == "ended"  then
-    --            endX = event.x
-    --            endY = event.y
-    --            checkSwipeDirection();
-    --        end
-    --    end
-    --    
-    --    Runtime:addEventListener("touch", swipe)
+
     
-    local function gotoSideMenu( )
+    local function openSideMenu( )
+        --OPEN--
         local function toFront()
             sideBarGroup:toFront()
         end
         --open sideMenu
         transition.to(listGroup, {time = 300, x = constants.centerX + 100, onComplete = toFront})
+        local sideMenuOpen = true
         print("Side Menu Opened.")
+        --opening and closing. Need to not let the tap go to the toSideMenuIcon:addEventListner("tap", closeSideMenu)
         
-        
-        --        local function outOfSideMenu()
-        --            transition.to(listGroup, {time = 500, x = 0})
-        --            navBar:removeEventListener("tap", outOfSideMenu)
-        --            print("Side Menu Closed.")
-        --        end
-        --        navBar:addEventListener("tap", outOfSideMenu)
+        --CLOSE--
+        local function closeSideMenu()
+            local function toBack()
+                sideBarGroup:toBack()
+            end
+            transition.to(listGroup, {time = 300, x = 0, onComplete = toBack})
+            sideMenuOpen = false
+            print("Side Menu Closed.")
+        end
+        if sideMenuOpen == true then
+            toSideMenuIcon:addEventListener("tap", closeSideMenu)
+        end
     end
     
-    toSideMenuIcon:addEventListener("tap", gotoSideMenu)
+    toSideMenuIcon:addEventListener("tap", openSideMenu)
     
 end
 
