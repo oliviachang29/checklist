@@ -140,29 +140,36 @@ function scene:createScene( event )
     sideBarGroup:toBack()
 
     
-    local function openSideMenu( )
+    function openSideMenu( )
         --OPEN--
         local function toFront()
             sideBarGroup:toFront()
         end
         --open sideMenu
         transition.to(listGroup, {time = 300, x = constants.centerX + 100, onComplete = toFront})
-        local sideMenuOpen = true
+        -- Need this so that we don't immediately call the next event listener
+        timer.performWithDelay(1,addCloseEventWithDelay)
         print("Side Menu Opened.")
         --opening and closing. Need to not let the tap go to the toSideMenuIcon:addEventListner("tap", closeSideMenu)
-        
-        --CLOSE--
-        local function closeSideMenu()
-            local function toBack()
-                sideBarGroup:toBack()
-            end
-            transition.to(listGroup, {time = 300, x = 0, onComplete = toBack})
-            sideMenuOpen = false
-            print("Side Menu Closed.")
+    end
+    
+    --CLOSE--
+    function closeSideMenu()
+        local function toBack()
+            sideBarGroup:toBack()
         end
-        if sideMenuOpen == true then
-            toSideMenuIcon:addEventListener("tap", closeSideMenu)
-        end
+        transition.to(listGroup, {time = 300, x = 0, onComplete = toBack})
+        -- Need this so that we don't immediately call the next event listener
+        timer.performWithDelay(1,addOpenEventWithDelay)
+        print("Side Menu Closed.")
+    end
+    
+    function addOpenEventWithDelay()
+        toSideMenuIcon:addEventListener("tap",openSideMenu)
+    end
+    
+    function addCloseEventWithDelay()
+        toSideMenuIcon:addEventListener("tap",closeSideMenu)
     end
     
     toSideMenuIcon:addEventListener("tap", openSideMenu)

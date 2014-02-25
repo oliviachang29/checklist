@@ -69,7 +69,7 @@ function scene:createScene( event )
     
     local function addToList()
         globals.basicListT.numRows = globals.basicListT.numRows + 1
-        saveTable(basicListT, "basiclistt.json")
+        saveTable(globals.basicListT, "basiclistt.json")
         storyboard.gotoScene( "basicList", {effect = "fromLeft"})
         if globals.basicListT.numRows > 7 then
             globals.basicListTableView:scrollToIndex(globals.basicListT.numRows, 700)
