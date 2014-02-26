@@ -22,7 +22,7 @@ globals = require ("globals")
  globals.basicListT= loadTable("basiclistt.json")
 if globals.basicListT == nil then
     globals.basicListT = {}
-    globals.basicListT.numRows = 0 --since it is an empty list
+    globals.basicListT.numRows = 2 --since it is an empty list
 end
 
 storyboard.gotoScene("basicList")

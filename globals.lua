@@ -4,20 +4,6 @@ local widget = require( "widget" )
 local data = require("data")
 
 local globals = {}
-
--- write some fake data to a table to be loaded into a list
-local listItems = {}
-
-for i = 1, 40 do
-    
-    -- set the list item with index i to a certain title.
-    listItems[i] = "My Task from JSON " .. i
-end
-
--- TESTING: Can we save the listItems table as json file?
-saveTable(listItems,"listitems.json")
-
-
 --font
 globals.font = 
 {
@@ -26,10 +12,6 @@ globals.font =
 }
 
 --for basiclist
-globals.basicListTableView = widget.newTableView
-
-globals.numRowsBasicList = 0
--- TESTING: Can we load the listItems2 table from a json file?
-globals.listItems2 = loadTable("listitems.json")
+globals.basicListTableView = widget.newTableView --change name to bLTableView
 
 return globals

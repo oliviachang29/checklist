@@ -23,6 +23,9 @@ function scene:createScene( event )
     local listGroup = display.newGroup()
     group:insert(listGroup)
     
+    globals.blRows = {}
+    globals.blRows[1] = "Walk the dog"
+    globals.blRows[2] = "Wash the car"
     local function onRowRender( event )
         
         -- Get reference to the row group
@@ -46,9 +49,7 @@ function scene:createScene( event )
                 rowTitle.x = constants.leftPadding
             end
         else
-            rowText = "Task " --globals.listItems2[row.index]
-            
-            rowTitle = display.newText(row, rowText .. row.index, 0,0, globals.font.regular, 20)
+            rowTitle = display.newText(row, globals.blRows[row.index], 0,0, globals.font.regular, 20)
             rowTitle:setFillColor(0,0,0)
             rowTitle.x = constants.leftPadding
         end
@@ -103,7 +104,6 @@ function scene:createScene( event )
         
     end
     --Create navigation things
-    
     local navBar = display.newRect(0, 0, 640, 100)
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     listGroup:insert(navBar)
@@ -121,7 +121,6 @@ function scene:createScene( event )
     navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
     listGroup:insert(navAddIcon)
     
-
     local function gotoNewTask()
         storyboard.gotoScene("newTask", {effect = "fromRight"})
     end

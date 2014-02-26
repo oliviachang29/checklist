@@ -69,7 +69,7 @@ function scene:createScene( event )
     
     local function addToList()
         globals.basicListT.numRows = globals.basicListT.numRows + 1
-        saveTable(basicListT, "basiclistt.json")
+        saveTable(globals.basicListT, "basiclistt.json")
         storyboard.gotoScene( "basicList", {effect = "fromLeft"})
         if globals.basicListT.numRows > 7 then
             globals.basicListTableView:scrollToIndex(globals.basicListT.numRows, 700)
@@ -78,10 +78,7 @@ function scene:createScene( event )
         
     end
     checkIcon:addEventListener("tap", addToList)
-    
-    
 
-    
     local function getListName(event)
         if  ( event.phase == "editing" ) then
          
@@ -93,6 +90,7 @@ function scene:createScene( event )
              itemName = event.target.text     
              print(itemName)
              native.setKeyboardFocus( nil )
+             globals.blRows[globals.basicListT.numRows+1] = event.target.text
         end
     end
     
