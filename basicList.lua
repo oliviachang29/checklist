@@ -104,7 +104,7 @@ function scene:createScene( event )
         
     end
     --Create navigation things
-    local navBar = display.newRect(0, 0, 640, 100)
+    local navBar = display.newRect(320, 0, 640, 100)
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     listGroup:insert(navBar)
     
@@ -138,14 +138,11 @@ function scene:createScene( event )
 
     sideBarGroup:toBack()
 
-    
+    --Fix scope!
     function openSideMenu( )
         --OPEN--
-        local function toFront()
-            sideBarGroup:toFront()
-        end
         --open sideMenu
-        transition.to(listGroup, {time = 300, x = constants.centerX + 100, onComplete = toFront})
+        transition.to(listGroup, {time = 300, x = constants.centerX + 100})
         -- Need this so that we don't immediately call the next event listener
         timer.performWithDelay(1,addCloseEventWithDelay)
         print("Side Menu Opened.")
@@ -154,10 +151,7 @@ function scene:createScene( event )
     
     --CLOSE--
     function closeSideMenu()
-        local function toBack()
-            sideBarGroup:toBack()
-        end
-        transition.to(listGroup, {time = 300, x = 0, onComplete = toBack})
+        transition.to(listGroup, {time = 300, x = 0})
         -- Need this so that we don't immediately call the next event listener
         timer.performWithDelay(1,addOpenEventWithDelay)
         print("Side Menu Closed.")
