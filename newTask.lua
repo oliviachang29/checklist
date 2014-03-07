@@ -67,7 +67,20 @@ function scene:createScene( event )
     }
     group:insert(onOffSwitch)
     
-    local function addToList()
+    local function addToList(event)
+        if  ( event.phase == "editing" ) then
+         
+             itemName = event.target.text        
+             print(itemName)
+
+        elseif ( event.phase == "ended" ) then
+    	
+             itemName = event.target.text     
+             print(itemName)
+             native.setKeyboardFocus( nil )
+             globals.basicListT[globals.basicListT.numRows+1] = event.target.text
+        end
+        
         globals.basicListT.numRows = globals.basicListT.numRows + 1
         saveTable(globals.basicListT, "basiclistt.json")
         storyboard.gotoScene( "basicList", {effect = "fromLeft"})
@@ -77,6 +90,7 @@ function scene:createScene( event )
         print("new row added to globals.basicListTableView -" .. globals.basicListT.numRows)
         
     end
+    
     checkIcon:addEventListener("tap", addToList)
 
     local function getListName(event)

@@ -76,7 +76,7 @@ function scene:createScene( event )
     
     
     -- Insert globals.basicListT.numRows rows
-    for i = 1, globals.basicListT.numRows do
+    for i = 1, 2 do
         
         -- default is that row isn't a category
         --these are the white rows
@@ -105,6 +105,7 @@ function scene:createScene( event )
     end
     --Create navigation things
     local navBar = display.newRect(320, 0, 640, 100)
+
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     listGroup:insert(navBar)
     
@@ -141,19 +142,16 @@ function scene:createScene( event )
     --Fix scope!
     function openSideMenu( )
         --OPEN--
-        --open sideMenu
-        transition.to(listGroup, {time = 300, x = constants.centerX + 100})
-        -- Need this so that we don't immediately call the next event listener
-        timer.performWithDelay(1,addCloseEventWithDelay)
-        print("Side Menu Opened.")
-        --opening and closing. Need to not let the tap go to the toSideMenuIcon:addEventListner("tap", closeSideMenu)
-    end
-    
-    --CLOSE--
-    function closeSideMenu()
+        --local function toFront()
+        --    sideBarGroup:toFront()
+        --end
+
+        --local function toBack()
+        --    sideBarGroup:toBack()
+        --end
         transition.to(listGroup, {time = 300, x = 0})
         -- Need this so that we don't immediately call the next event listener
-        timer.performWithDelay(1,addOpenEventWithDelay)
+        timer.performWithDelay(2,addOpenEventWithDelay)
         print("Side Menu Closed.")
     end
     
