@@ -44,8 +44,6 @@ function scene:createScene( event )
     
     local taskNameField = native.newTextField( 160, 100, 240, 50)
 
-    taskNameField:addEventListener("userInput",taskNameField)
-    
     group:insert(taskNameField)
     native.setKeyboardFocus( taskNameField )
     local categoryText = display.newText(group, "Category?", 75, 150, "Museo Sans 300", 20)
@@ -67,22 +65,14 @@ function scene:createScene( event )
     }
     group:insert(onOffSwitch)
     
-    local function addToList(event)
-        if  ( event.phase == "editing" ) then
-         
-             itemName = event.target.text        
-             print(itemName)
-
-        elseif ( event.phase == "ended" ) then
-    	
-             itemName = event.target.text     
-             print(itemName)
-             native.setKeyboardFocus( nil )
-             globals.basicListT[globals.basicListT.numRows+1] = event.target.text
-        end
+    local function addToList()
         
-        globals.basicListT.numRows = globals.basicListT.numRows + 1
+        globals.basicListT[globals.basicListT.numRows+1] = globals.taskName
+        print("new row! " .. globals.basicListT[globals.basicListT.numRows+1])
         saveTable(globals.basicListT, "basiclistt.json")
+
+        -- globals.basicListT.numRows = globals.basicListT.numRows + 1
+        -- saveTable(globals.basicListT, "basiclistt.json")
         storyboard.gotoScene( "basicList", {effect = "fromLeft"})
         if globals.basicListT.numRows > 7 then
             globals.basicListTableView:scrollToIndex(globals.basicListT.numRows, 700)
@@ -94,19 +84,17 @@ function scene:createScene( event )
     checkIcon:addEventListener("tap", addToList)
 
     local function getListName(event)
-        if  ( event.phase == "editing" ) then
-         
-             itemName = event.target.text        
-             print(itemName)
-
-        elseif ( event.phase == "ended" ) then
+        if ( event.phase == "ended" ) then
     	
-             itemName = event.target.text     
-             print(itemName)
+             globals.taskName = event.target.text     
+             print(globals.taskName)
              native.setKeyboardFocus( nil )
-             globals.blRows[globals.basicListT.numRows+1] = event.target.text
         end
     end
+    
+
+    -- taskNameField:addEventListener("userInput",taskNameField)
+    taskNameField:addEventListener("userInput",getListName)
     
     
 end

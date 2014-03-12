@@ -14,4 +14,7 @@ globals.font =
 --for basiclist
 globals.basicListTableView = widget.newTableView --change name to bLTableView
 
+--for adding a new task
+globals.taskName = ""
+
 return globals

@@ -19,7 +19,7 @@ background:setFillColor(238/255, 238/255, 238/255)
 background:toBack()
 
 globals = require ("globals")
---globals.basicListT= loadTable("basiclistt.json")
+globals.basicListT= loadTable("basiclistt.json")
 if globals.basicListT == nil then
     globals.basicListT = {}
     globals.basicListT.numRows = 0 --since it is an empty list
