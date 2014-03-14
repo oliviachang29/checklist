@@ -9,20 +9,24 @@ local json = require("json")
 local storyboard = require("storyboard") --so it can go to scenes
 
 local background = display.newRect( display.screenOriginX,
-                            display.screenOriginY, 
-                            display.pixelWidth, 
-                            display.pixelHeight)
- 
+display.screenOriginY, 
+display.pixelWidth, 
+display.pixelHeight)
+
 background.x, background.y = display.contentCenterX,  display.contentCenterY
 background:setFillColor(238/255, 238/255, 238/255)
- 
+
 background:toBack()
 
 globals = require ("globals")
-globals.basicListT= loadTable("basiclistt.json")
-if globals.basicListT == nil then
-    globals.basicListT = {}
-    globals.basicListT.numRows = 0 --since it is an empty list
-end
+--globals.basicListT= loadTable("basiclistt.json")
+--if globals.basicListT == nil then
+--    globals.basicListT = {}
+--    globals.basicListT.numRows = 0 --since it is an empty list
+--end
+
+globals.blRows = {}
+globals.blRows[1] = "Walk the dog"
+globals.blRows[2] = "Wash the car"
 
 storyboard.gotoScene("basicList")

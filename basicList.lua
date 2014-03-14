@@ -23,9 +23,6 @@ function scene:createScene( event )
     local listGroup = display.newGroup()
     group:insert(listGroup)
     
-    globals.blRows = {}
-    globals.blRows[1] = "Walk the dog"
-    globals.blRows[2] = "Wash the car"
     local function onRowRender( event )
         
         -- Get reference to the row group
@@ -76,7 +73,7 @@ function scene:createScene( event )
     
     
     -- Insert globals.basicListT.numRows rows
-    for i = 1, 2 do
+    for i = 1, #globals.blRows do
         
         -- default is that row isn't a category
         --these are the white rows

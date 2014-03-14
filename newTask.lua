@@ -66,28 +66,22 @@ function scene:createScene( event )
     group:insert(onOffSwitch)
     
     local function addToList()
-        
-        globals.basicListT[globals.basicListT.numRows+1] = globals.taskName
-        print("new row! " .. globals.basicListT[globals.basicListT.numRows+1])
-        saveTable(globals.basicListT, "basiclistt.json")
-
-        -- globals.basicListT.numRows = globals.basicListT.numRows + 1
+        globals.blRows[#globals.blRows+1] = "Drive the cat"  
+        print("This is the awesome row" .. globals.blRows[#globals.blRows])
         -- saveTable(globals.basicListT, "basiclistt.json")
         storyboard.gotoScene( "basicList", {effect = "fromLeft"})
-        if globals.basicListT.numRows > 7 then
-            globals.basicListTableView:scrollToIndex(globals.basicListT.numRows, 700)
+        if #globals.blRows > 7 then
+            globals.basicListTableView:scrollToIndex(#globals.blRows, 700)
         end
-        print("new row added to globals.basicListTableView -" .. globals.basicListT.numRows)
-        
+        print("new row added to globals.basicListTableView -" .. globals.blRows[#globals.blRows])
     end
     
     checkIcon:addEventListener("tap", addToList)
 
     local function getListName(event)
         if ( event.phase == "ended" ) then
-    	
-             globals.taskName = event.target.text     
-             print(globals.taskName)
+             --globals.blRows[#globals.blRows+1] = event.target.text     
+             --print("This is the awesome row" .. globals.blRows[#globals.blRows])
              native.setKeyboardFocus( nil )
         end
     end
