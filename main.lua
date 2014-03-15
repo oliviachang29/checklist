@@ -19,14 +19,12 @@ background:setFillColor(238/255, 238/255, 238/255)
 background:toBack()
 
 globals = require ("globals")
---globals.basicListT= loadTable("basiclistt.json")
---if globals.basicListT == nil then
---    globals.basicListT = {}
---    globals.basicListT.numRows = 0 --since it is an empty list
---end
 
 globals.blRows = {}
-globals.blRows[1] = "Walk the dog"
-globals.blRows[2] = "Wash the car"
+
+globals.blRows = loadTable("blrows.json")
+if globals.blRows == nil then
+	globals.blRows = {}
+end
 
 storyboard.gotoScene("basicList")
