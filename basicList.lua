@@ -5,23 +5,20 @@
 local widget = require( "widget" ) --widgets supplied by corona, not in a file
 local globals = require("globals")
 local constants = require("constants")
-local storyboard = require("storyboard")
+local composer = require("composer")
 
-local scene = storyboard.newScene()
-
--- Clear previous scene
-storyboard.removeAll()
+local scene = composer.newScene()
 
 -- local forward references should go here --globals
 
 -- Called when the scene's view does not exist:
-function scene:createScene( event )
+function scene:create( event )
     
-    local group = self.view
+    local sceneGroup = self.view
     
   
     local listGroup = display.newGroup()
-    group:insert(listGroup)
+    sceneGroup:insert(listGroup)
     
     local function onRowRender( event )
         
@@ -57,6 +54,11 @@ function scene:createScene( event )
         rowTitle.y = rowHeight * 0.5
     end
     
+    local function onRowTouch(event)
+        local row = event.target
+        print( "Tapped to delete row: " .. row.index )
+        globals.basicListTableView:deleteRow( row.index )
+    end
     -- Create the widget
     globals.basicListTableView = widget.newTableView
     {
@@ -120,13 +122,13 @@ function scene:createScene( event )
     listGroup:insert(navAddIcon)
     
     local function gotoNewTask()
-        storyboard.gotoScene("newTask", {effect = "fromRight"})
+        composer.gotoScene("newTask", {effect = "fromBottom"})
     end
     navAddIcon:addEventListener("tap", gotoNewTask)
     
       --put the sidebar here, so that it is under the list & nav
     local sideBarGroup = display.newGroup()
-    group:insert(sideBarGroup)
+    sceneGroup:insert(sideBarGroup)
     local tasksToDoIcon = display.newImage("images/tasksToDoIcon.png")
     sideBarGroup:insert(tasksToDoIcon)
     tasksToDoIcon.x, tasksToDoIcon.y = constants.centerX - 30, 65
@@ -164,79 +166,52 @@ function scene:createScene( event )
     
 end
 
--- Called BEFORE scene has moved onscreen:
-function scene:willEnterScene( event )
-    local group = self.view
-    
+function scene:show( event )
+
+   local sceneGroup = self.view
+   local phase = event.phase
+
+   if ( phase == "will" ) then
+      -- Called when the scene is still off screen (but is about to come on screen).
+   elseif ( phase == "did" ) then
+      -- Called when the scene is now on screen.
+      -- Insert code here to make the scene come alive.
+      -- Example: start timers, begin animation, play audio, etc.
+   end
 end
 
--- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
-    local group = self.view
-    
+-- "scene:hide()"
+function scene:hide( event )
+
+   local sceneGroup = self.view
+   local phase = event.phase
+
+   if ( phase == "will" ) then
+      -- Called when the scene is on screen (but is about to go off screen).
+      -- Insert code here to "pause" the scene.
+      -- Example: stop timers, stop animation, stop audio, etc.
+   elseif ( phase == "did" ) then
+      -- Called immediately after scene goes off screen.
+   end
 end
 
--- Called when scene is about to move offscreen:
-function scene:exitScene( event )
-    local group = self.view
-    
-end
+-- "scene:destroy()"
+function scene:destroy( event )
 
--- Called AFTER scene has finished moving offscreen:
-function scene:didExitScene( event )
-    local group = self.view
-    
-end
+   local sceneGroup = self.view
 
--- Called prior to the removal of scene's "view" (display view)
-function scene:destroyScene( event )
-    local group = self.view
-    
-end
-
--- Called if/when overlay scene is displayed via storyboard.showOverlay()
-function scene:overlayBegan( event )
-    local group = self.view
-    local overlay_name = event.sceneName  -- name of the overlay scene
-    
-end
-
--- Called if/when overlay scene is hidden/removed via storyboard.hideOverlay()
-function scene:overlayEnded( event )
-    local group = self.view
-    local overlay_name = event.sceneName  -- name of the overlay scene
-    
+   -- Called prior to the removal of scene's view ("sceneGroup").
+   -- Insert code here to clean up the scene.
+   -- Example: remove display objects, save state, etc.
 end
 
 ---------------------------------------------------------------------------------
--- END OF YOUR IMPLEMENTATION
----------------------------------------------------------------------------------
 
--- "createScene" event is dispatched if scene's view does not exist
-scene:addEventListener( "createScene", scene )
-
--- "willEnterScene" event is dispatched before scene transition begins
-scene:addEventListener( "willEnterScene", scene )
-
--- "enterScene" event is dispatched whenever scene transition has finished
-scene:addEventListener( "enterScene", scene )
-
--- "exitScene" event is dispatched before next scene's transition begins
-scene:addEventListener( "exitScene", scene )
-
--- "didExitScene" event is dispatched after scene has finished transitioning out
-scene:addEventListener( "didExitScene", scene )
-
--- "destroyScene" event is dispatched before view is unloaded, which can be
--- automatically unloaded in low memory situations, or explicitly via a call to
--- storyboard.purgeScene() or storyboard.removeScene().
-scene:addEventListener( "destroyScene", scene )
-
--- "overlayBegan" event is dispatched when an overlay scene is shown
-scene:addEventListener( "overlayBegan", scene )
-
--- "overlayEnded" event is dispatched when an overlay scene is hidden/removed
-scene:addEventListener( "overlayEnded", scene )
+-- Listener setup
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
 
 ---------------------------------------------------------------------------------
 

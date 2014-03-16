@@ -2,8 +2,6 @@
 
 local json = require("json")
 
-local taskName = "";
-
 function saveTable(t,filename)
     local path = system.pathForFile(filename,system.DocumentsDirectory)
     local file = io.open(path, "w")

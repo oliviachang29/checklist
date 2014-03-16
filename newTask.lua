@@ -5,48 +5,48 @@
 local widget = require( "widget" ) --widgets supplied by corona
 local globals = require("globals") --globals.lua
 local constants = require("constants")
-local storyboard = require("storyboard")
+local composer = require("composer")
 
-local scene = storyboard.newScene()
+local scene = composer.newScene()
 
--- Clear previous scene
-storyboard.removeAll()
 
 -- local forward references should go here --
 
 -- Called when the scene's view does not exist:
-function scene:createScene( event )
-    local group = self.view
+function scene:create( event )
+    local sceneGroup = self.view
     --Create navigation things
     local navBar = display.newRect(0, 0, 640, 100)
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
-    group:insert(navBar)
+    sceneGroup:insert(navBar)
     
     local cancelIcon = display.newImage("images/cancelIcon.png")
     cancelIcon.x, cancelIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
     cancelIcon:scale(0.1, 0.1)
-    group:insert(cancelIcon)
+    sceneGroup:insert(cancelIcon)
     
-    local leftText = display.newText(group, "Cancel", 65, 23, "Museo Sans 300", 20) --navText is the hierarchy text "Cancel"
+    local leftText = display.newText(sceneGroup, "Cancel", 65, 23, "Museo Sans 300", 20) --navText is the hierarchy text "Cancel"
     leftText:setFillColor(1,1,1)
     
     local function gotoBasicList()
-        storyboard.gotoScene( "basicList", {effect = "fromLeft"})
+        composer.gotoScene( "basicList", {effect = "slideDown"})
     end
     cancelIcon:addEventListener("tap", gotoBasicList)
     leftText:addEventListener("tap", gotoBasicList)
-    local middleText = display.newText(group, "New Task", constants.centerX + 25, 23, "Museo Sans 300", 20)
+    local middleText = display.newText(sceneGroup, "New Task", constants.centerX + 25, 23, "Museo Sans 300", 20)
     middleText:setFillColor(0,0,0) 
     
     local checkIcon = display.newImage("images/checkIcon.png")
     checkIcon.x, checkIcon.y = constants.centerX + 125, 23
-    group:insert(checkIcon)
+    sceneGroup:insert(checkIcon)
     
     local taskNameField = native.newTextField( 160, 100, 240, 50)
 
-    group:insert(taskNameField)
+    sceneGroup:insert(taskNameField)
+    local listName = "Basic List"
+    taskNameField.placeholder = "Add an item into " .. listName
     native.setKeyboardFocus( taskNameField )
-    local categoryText = display.newText(group, "Category?", 75, 150, "Museo Sans 300", 20)
+    local categoryText = display.newText(sceneGroup, "Category?", 75, 150, "Museo Sans 300", 20)
     categoryText:setFillColor(0,0,0)
     -- Handle press events for the checkbox
     local function onSwitchPress( event )
@@ -63,15 +63,14 @@ function scene:createScene( event )
         id = "onOffSwitch",
         onPress = onSwitchPress
     }
-    group:insert(onOffSwitch)
+    sceneGroup:insert(onOffSwitch)
     
     local function goToBL()
 
-        storyboard.gotoScene( "basicList", {effect = "fromLeft"})
+        composer.gotoScene( "basicList", {effect = "fromLeft"})
         if #globals.blRows > 7 then
             globals.basicListTableView:scrollToIndex(#globals.blRows, 700)
         end
-        print("new row added to globals.basicListTableView -" .. globals.blRows[#globals.blRows])
     end
     
     checkIcon:addEventListener("tap", goToBL)
@@ -80,65 +79,61 @@ function scene:createScene( event )
         if ( event.phase == "ended" ) then
              globals.blRows[#globals.blRows+1] = event.target.text    
              saveTable(globals.blRows,"blrows.json") 
-             print("This is the awesome row" .. globals.blRows[#globals.blRows])
+             print("New row: " .. globals.blRows[#globals.blRows])
              native.setKeyboardFocus( nil )
         end
     end
-    
 
     -- taskNameField:addEventListener("userInput",taskNameField)
     taskNameField:addEventListener("userInput",getListName)
-    
-    
 end
 
+function scene:show( event )
 
--- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
-    local group = self.view
-    
-    --      INSERT code here (e.g. start timers, load audio, start listeners, etc.)
-    
+   local sceneGroup = self.view
+   local phase = event.phase
+
+   if ( phase == "will" ) then
+      -- Called when the scene is still off screen (but is about to come on screen).
+   elseif ( phase == "did" ) then
+      -- Called when the scene is now on screen.
+      -- Insert code here to make the scene come alive.
+      -- Example: start timers, begin animation, play audio, etc.
+   end
 end
 
+-- "scene:hide()"
+function scene:hide( event )
 
--- Called when scene is about to move offscreen:
-function scene:exitScene( event )
-    local group = self.view
-    
-    --      INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
-    
+   local sceneGroup = self.view
+   local phase = event.phase
+
+   if ( phase == "will" ) then
+      -- Called when the scene is on screen (but is about to go off screen).
+      -- Insert code here to "pause" the scene.
+      -- Example: stop timers, stop animation, stop audio, etc.
+   elseif ( phase == "did" ) then
+      -- Called immediately after scene goes off screen.
+   end
 end
 
+-- "scene:destroy()"
+function scene:destroy( event )
 
--- Called prior to the removal of scene's "view" (display group)
-function scene:destroyScene( event )
-    local group = self.view
-    native.setKeyboardFocus(nil)
-    --      INSERT code here (e.g. remove listeners, widgets, save state, etc.)
-    
+   local sceneGroup = self.view
+
+   -- Called prior to the removal of scene's view ("sceneGroup").
+   -- Insert code here to clean up the scene.
+   -- Example: remove display objects, save state, etc.
 end
-
-
 
 ---------------------------------------------------------------------------------
--- END OF YOUR IMPLEMENTATION
----------------------------------------------------------------------------------
 
--- "createScene" event is dispatched if scene's view does not exist
-scene:addEventListener( "createScene", scene )
-
--- "enterScene" event is dispatched whenever scene transition has finished
-scene:addEventListener( "enterScene", scene )
-
--- "exitScene" event is dispatched before next scene's transition begins
-scene:addEventListener( "exitScene", scene )
-
--- "destroyScene" event is dispatched before view is unloaded, which can be
--- automatically unloaded in low memory situations, or explicitly via a call to
--- storyboard.purgeScene() or storyboard.removeScene().
-scene:addEventListener( "destroyScene", scene )
-
+-- Listener setup
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
 
 ---------------------------------------------------------------------------------
 

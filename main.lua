@@ -6,7 +6,7 @@
 display.setStatusBar(display.HiddenStatusBar)
 --system.activate( "multitouch" )
 local json = require("json")
-local storyboard = require("storyboard") --so it can go to scenes
+local composer = require("composer") --so it can go to scenes
 
 local background = display.newRect( display.screenOriginX,
 display.screenOriginY, 
@@ -20,11 +20,9 @@ background:toBack()
 
 globals = require ("globals")
 
-globals.blRows = {}
-
 globals.blRows = loadTable("blrows.json")
 if globals.blRows == nil then
 	globals.blRows = {}
 end
 
-storyboard.gotoScene("basicList")
+composer.gotoScene("basicList")
