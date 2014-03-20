@@ -20,9 +20,18 @@ background:toBack()
 
 globals = require ("globals")
 
-globals.blRows = loadTable("blrows.json")
-if globals.blRows == nil then
-	globals.blRows = {}
-end
+--Find environment - uncomment if needed
+-- "simulator" if on simulator
+-- "device" if on iOS, Android or Xcode Simulator
+--globals.environment = system.getInfo( "environment" )
+--print("Environment: " .. globals.environment)
+
+globals.blRows = {}
+globals.blRows[1] = "Row name"
+
+--globals.blRows = loadTable("blrows.json")
+--if globals.blRows == nil then
+--	globals.blRows = {}
+--end
 
 composer.gotoScene("basicList")

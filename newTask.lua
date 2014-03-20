@@ -15,7 +15,8 @@ local scene = composer.newScene()
 -- Called when the scene's view does not exist:
 function scene:create( event )
     local sceneGroup = self.view
-    --Create navigation things
+    
+    --NAVIGATION BAR--
     local navBar = display.newRect(0, 0, 640, 100)
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     sceneGroup:insert(navBar)
@@ -25,7 +26,7 @@ function scene:create( event )
     cancelIcon:scale(0.1, 0.1)
     sceneGroup:insert(cancelIcon)
     
-    local leftText = display.newText(sceneGroup, "Cancel", 65, 23, "Museo Sans 300", 20) --navText is the hierarchy text "Cancel"
+    local leftText = display.newText(sceneGroup, "Cancel", 65, 23, "Museo Sans 300", 20)
     leftText:setFillColor(1,1,1)
     
     local function gotoBasicList()
@@ -40,14 +41,17 @@ function scene:create( event )
     checkIcon.x, checkIcon.y = constants.centerX + 125, 23
     sceneGroup:insert(checkIcon)
     
+    --TEXT FIELD--
     local taskNameField = native.newTextField( 160, 100, 240, 50)
-
-    sceneGroup:insert(taskNameField)
     local listName = "Basic List"
-    taskNameField.placeholder = "Add an item into " .. listName
+--    taskNameField.placeholder = "Add an item into " .. listName
     native.setKeyboardFocus( taskNameField )
+    
+    --CATEGORY TEXT
     local categoryText = display.newText(sceneGroup, "Category?", 75, 150, "Museo Sans 300", 20)
     categoryText:setFillColor(0,0,0)
+    
+    --CATEGORY SWITCh
     -- Handle press events for the checkbox
     local function onSwitchPress( event )
         local switch = event.target
@@ -66,7 +70,8 @@ function scene:create( event )
     sceneGroup:insert(onOffSwitch)
     
     local function goToBL()
-
+        print("Going to BL!")
+        taskNameField:removeSelf()
         composer.gotoScene( "basicList", {effect = "fromLeft"})
         if #globals.blRows > 7 then
             globals.basicListTableView:scrollToIndex(#globals.blRows, 700)
@@ -76,9 +81,9 @@ function scene:create( event )
     checkIcon:addEventListener("tap", goToBL)
 
     local function getListName(event)
-        if ( event.phase == "ended" ) then
+        if ( event.phase == "ended" ) or (event.phase == "submitted") then
              globals.blRows[#globals.blRows+1] = event.target.text    
-             saveTable(globals.blRows,"blrows.json") 
+             --saveTable(globals.blRows,"blrows.json") 
              print("New row: " .. globals.blRows[#globals.blRows])
              native.setKeyboardFocus( nil )
         end
@@ -121,7 +126,7 @@ end
 function scene:destroy( event )
 
    local sceneGroup = self.view
-
+   
    -- Called prior to the removal of scene's view ("sceneGroup").
    -- Insert code here to clean up the scene.
    -- Example: remove display objects, save state, etc.

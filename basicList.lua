@@ -125,18 +125,6 @@ function scene:create( event )
         composer.gotoScene("newTask", {effect = "fromBottom"})
     end
     navAddIcon:addEventListener("tap", gotoNewTask)
-    
-      --put the sidebar here, so that it is under the list & nav
-    local sideBarGroup = display.newGroup()
-    sceneGroup:insert(sideBarGroup)
-    local tasksToDoIcon = display.newImage("images/tasksToDoIcon.png")
-    sideBarGroup:insert(tasksToDoIcon)
-    tasksToDoIcon.x, tasksToDoIcon.y = constants.centerX - 30, 65
-
-    local tasksToDoText = display.newText(sideBarGroup, "To Do: \n    "..globals.basicListTableView:getNumRows(),constants.centerX - 20, 150, globals.font.regular, 20)
-    tasksToDoText:setFillColor(0,0,0)
-
-    sideBarGroup:toBack()
 
     --Fix scope!
     function openSideMenu( )
@@ -148,18 +136,24 @@ function scene:create( event )
         --local function toBack()
         --    sideBarGroup:toBack()
         --end
-        transition.to(listGroup, {time = 300, x = 0})
+        transition.to(listGroup, {time = 300, x = constants.centerX + 100 })
         -- Need this so that we don't immediately call the next event listener
-        timer.performWithDelay(2,addOpenEventWithDelay)
+        timer.performWithDelay(2,addCloseEventWithDelay)
+        print("Side Menu Opened.")
+    end
+    
+    function closeSideMenu()
+        transition.to(listGroup, {time = 300, x = 0 })
         print("Side Menu Closed.")
+        timer.performWithDelay(2,addOpenEventWithDelay)
     end
     
-    function addOpenEventWithDelay()
-        toSideMenuIcon:addEventListener("tap",openSideMenu)
-    end
-    
-    function addCloseEventWithDelay()
+    function addCloseEventWithDelay() -- Called First
         toSideMenuIcon:addEventListener("tap",closeSideMenu)
+    end
+    
+    function addOpenEventWithDelay() -- Called Second
+        toSideMenuIcon:addEventListener("tap",openSideMenu)
     end
     
     toSideMenuIcon:addEventListener("tap", openSideMenu)
