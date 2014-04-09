@@ -16,7 +16,7 @@ function scene:create( event )
     
     local sceneGroup = self.view
     
-  
+    
     local listGroup = display.newGroup()
     sceneGroup:insert(listGroup)
     
@@ -59,11 +59,12 @@ function scene:create( event )
         print( "Tapped to delete row: " .. row.index )
         globals.basicListTableView:deleteRow( row.index )
     end
+    
     -- Create the widget
     globals.basicListTableView = widget.newTableView
     {
         left = 0,
-        top = 50,
+        top = 100, --50
         height = 440,
         width = 320,
         hideScrollBar = true,
@@ -83,13 +84,13 @@ function scene:create( event )
         rowHeight = 36
         rowColor = { default={1,1,1} }
         
---        -- Make some rows categories
---        --these are the dark blues
---        if ( i == 1 or i % 11 == 0 ) then
---            isCategory = true
---            rowHeight = 50
---            rowColor = { default={constants.darkblue.r, constants.darkblue.g, constants.darkblue.b} }
---        end
+        --        -- Make some rows categories
+        --        --these are the dark blues
+        --        if ( i == 1 or i % 11 == 0 ) then
+        --            isCategory = true
+        --            rowHeight = 50
+        --            rowColor = { default={constants.darkblue.r, constants.darkblue.g, constants.darkblue.b} }
+        --        end
         
         -- Insert a row into the tableView
         globals.basicListTableView:insertRow(
@@ -104,7 +105,7 @@ function scene:create( event )
     end
     --Create navigation things
     local navBar = display.newRect(320, 0, 640, 100)
-
+    
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     listGroup:insert(navBar)
     
@@ -114,38 +115,52 @@ function scene:create( event )
     
     local listName = "To Do"
     local middleText = display.newText(listGroup, listName, constants.centerX, 23, globals.font.regular, 20) -- middleText is the name of the list. It is in the middle
-
+    
     middleText:setFillColor(0,0,0) 
     
     local navAddIcon = display.newImage("images/navAddIcon.png")
     navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
     listGroup:insert(navAddIcon)
     
-    local function gotoNewTask()
-        composer.gotoScene("newTask", {effect = "fromBottom"})
+    local function getListName(event)
+        if ( event.phase == "ended" ) or (event.phase == "submitted") then
+            globals.blRows[#globals.blRows+1] = event.target.text    
+            print("New row: " .. globals.blRows[#globals.blRows])
+            native.setKeyboardFocus( nil )
+            globals.basicListTableView:insertRow(
+            {
+                isCategory = false,
+                rowHeight = 36,
+                rowColor = { default={1,1,1} },
+                lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
+            }
+            )
+            if #globals.blRows > 4 then
+                globals.basicListTableView:scrollToIndex(#globals.blRows - 4, 700)
+            else
+                globals.basicListTableView:scrollToIndex(#globals.blRows, 700)
+            end
+            event.target.text = '' --clear textfield
+        end
     end
-    navAddIcon:addEventListener("tap", gotoNewTask)
-
+        --Create text field
+        local taskNameField = native.newTextField( 160, 75, 320, 53) --centerX, centerY, width, height
+        taskNameField.placeholder = "Add an item into " .. listName
+        -- if touched, go to getListName
+        taskNameField:addEventListener("userInput",getListName)
+    
     --Fix scope!
     function openSideMenu( )
-        --OPEN--
-        --local function toFront()
-        --    sideBarGroup:toFront()
-        --end
-
-        --local function toBack()
-        --    sideBarGroup:toBack()
-        --end
         transition.to(listGroup, {time = 300, x = constants.centerX + 100 })
         -- Need this so that we don't immediately call the next event listener
-        timer.performWithDelay(2,addCloseEventWithDelay)
+        timer.performWithDelay(1,addCloseEventWithDelay)
         print("Side Menu Opened.")
     end
     
     function closeSideMenu()
         transition.to(listGroup, {time = 300, x = 0 })
         print("Side Menu Closed.")
-        timer.performWithDelay(2,addOpenEventWithDelay)
+        timer.performWithDelay(1,addOpenEventWithDelay)
     end
     
     function addCloseEventWithDelay() -- Called First
@@ -161,42 +176,43 @@ function scene:create( event )
 end
 
 function scene:show( event )
-
-   local sceneGroup = self.view
-   local phase = event.phase
-
-   if ( phase == "will" ) then
-      -- Called when the scene is still off screen (but is about to come on screen).
-   elseif ( phase == "did" ) then
-      -- Called when the scene is now on screen.
-      -- Insert code here to make the scene come alive.
-      -- Example: start timers, begin animation, play audio, etc.
-   end
+    
+    local sceneGroup = self.view
+    local phase = event.phase
+    
+    if ( phase == "will" ) then
+        -- Called when the scene is still off screen (but is about to come on screen).
+    elseif ( phase == "did" ) then
+        -- Called when the scene is now on screen.
+        -- Insert code here to make the scene come alive.
+        -- Example: start timers, begin animation, play audio, etc.
+        
+    end
 end
 
 -- "scene:hide()"
 function scene:hide( event )
-
-   local sceneGroup = self.view
-   local phase = event.phase
-
-   if ( phase == "will" ) then
-      -- Called when the scene is on screen (but is about to go off screen).
-      -- Insert code here to "pause" the scene.
-      -- Example: stop timers, stop animation, stop audio, etc.
-   elseif ( phase == "did" ) then
-      -- Called immediately after scene goes off screen.
-   end
+    
+    local sceneGroup = self.view
+    local phase = event.phase
+    
+    if ( phase == "will" ) then
+        native.setKeyboardFocus( nil )
+        -- Called when the scene is on screen (but is about to go off screen).
+        -- Insert code here to "pause" the scene.
+        -- Example: stop timers, stop animation, stop audio, etc.
+    elseif ( phase == "did" ) then
+        -- Called immediately after scene goes off screen.
+    end
 end
 
 -- "scene:destroy()"
 function scene:destroy( event )
-
-   local sceneGroup = self.view
-
-   -- Called prior to the removal of scene's view ("sceneGroup").
-   -- Insert code here to clean up the scene.
-   -- Example: remove display objects, save state, etc.
+    
+    local sceneGroup = self.view
+    -- Called prior to the removal of scene's view ("sceneGroup").
+    -- Insert code here to clean up the scene.
+    -- Example: remove display objects, save state, etc.
 end
 
 ---------------------------------------------------------------------------------

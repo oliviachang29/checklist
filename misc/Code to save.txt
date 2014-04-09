@@ -65,3 +65,18 @@
     --    end
     --    
     --    Runtime:addEventListener("touch", swipe)
+
+--
+
+    local function gotoNewTask()
+                composer.gotoScene("newTask", {effect = "fromBottom"})
+    end
+    navAddIcon:addEventListener("tap", gotoNewTask)
+
+--
+
+--Find environment
+ --"simulator" if on simulator
+ --"device" if on iOS, Android or Xcode Simulator
+globals.environment = system.getInfo( "environment" )
+print("Environment: " .. globals.environment)
