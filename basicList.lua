@@ -58,6 +58,7 @@ function scene:create( event )
         local row = event.target
         print( "Tapped to delete row: " .. row.index )
         globals.basicListTableView:deleteRow( row.index )
+        --then delete the globals.blRows[row.index] and move all the blRows down one
     end
     
     -- Create the widget
@@ -118,15 +119,16 @@ function scene:create( event )
     
     middleText:setFillColor(0,0,0) 
     
-    local navAddIcon = display.newImage("images/navAddIcon.png")
-    navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
-    listGroup:insert(navAddIcon)
+--    local navAddIcon = display.newImage("images/navAddIcon.png")
+--    navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
+--    listGroup:insert(navAddIcon)
     
     local function getListName(event)
         if ( event.phase == "ended" ) or (event.phase == "submitted") then
-            globals.blRows[#globals.blRows+1] = event.target.text    
+            globals.blRows[#globals.blRows+1] = "     " .. event.target.text    
             print("New row: " .. globals.blRows[#globals.blRows])
             native.setKeyboardFocus( nil )
+            -- Insert a row into the tableView
             globals.basicListTableView:insertRow(
             {
                 isCategory = false,
@@ -143,15 +145,16 @@ function scene:create( event )
             event.target.text = '' --clear textfield
         end
     end
-        --Create text field
+    --Create text field
         local taskNameField = native.newTextField( 160, 75, 320, 53) --centerX, centerY, width, height
-        taskNameField.placeholder = "Add an item into " .. listName
+        taskNameField.placeholder = "Tap to add an item into " .. listName
         -- if touched, go to getListName
         taskNameField:addEventListener("userInput",getListName)
     
     --Fix scope!
     function openSideMenu( )
         transition.to(listGroup, {time = 300, x = constants.centerX + 100 })
+        transition.to(taskNameField, {time = 300, x = 420})
         -- Need this so that we don't immediately call the next event listener
         timer.performWithDelay(1,addCloseEventWithDelay)
         print("Side Menu Opened.")
@@ -159,6 +162,7 @@ function scene:create( event )
     
     function closeSideMenu()
         transition.to(listGroup, {time = 300, x = 0 })
+        transition.to(taskNameField, {time = 300, x = 160})
         print("Side Menu Closed.")
         timer.performWithDelay(1,addOpenEventWithDelay)
     end
