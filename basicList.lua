@@ -55,9 +55,17 @@ function scene:create( event )
     end
     
     local function onRowTouch(event)
-        local row = event.target
-        print( "Tapped to delete row: " .. row.index )
-        globals.basicListTableView:deleteRow( row.index )
+        local phase = event.phase
+ 
+        if "press" == phase then
+            --print( "Touched row:", event.target.index )
+            local row = event.target
+            print( "Tapped to delete row: " .. row.index )
+            globals.basicListTableView:deleteRow( row.index )
+
+            table.remove(globals.blRows,row.index)
+        end
+        
         --then delete the globals.blRows[row.index] and move all the blRows down one
     end
     
@@ -124,11 +132,14 @@ function scene:create( event )
 --    listGroup:insert(navAddIcon)
     
     local function getListName(event)
-        if ( event.phase == "ended" ) or (event.phase == "submitted") then
+        if (event.phase == "submitted") then
+            print ("i am in getListName")
             globals.blRows[#globals.blRows+1] = "     " .. event.target.text    
             print("New row: " .. globals.blRows[#globals.blRows])
             native.setKeyboardFocus( nil )
             -- Insert a row into the tableView
+            --globals.basicListTableView:reloadData()
+
             globals.basicListTableView:insertRow(
             {
                 isCategory = false,
@@ -137,7 +148,11 @@ function scene:create( event )
                 lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
             }
             )
+            print ("test test" .. #globals.blRows)
+
+            --globals.basicListTableView:deleteRow( #globals.blRows - 1 )
             if #globals.blRows > 4 then
+
                 globals.basicListTableView:scrollToIndex(#globals.blRows - 4, 700)
             else
                 globals.basicListTableView:scrollToIndex(#globals.blRows, 700)
