@@ -133,6 +133,27 @@ function scene:create( event )
     
     local function getListName(event)
         if (event.phase == "submitted") then
+            local function textWrap( str, limit, indent, indent1 )
+                 
+                 limit = limit
+                 indent = indent
+                 indent1 = indent
+                 
+                 local here = 1 - #indent1
+                 return indent1..str:gsub( "(%s+)()(%S+)()",
+                 function( sp, st, word, fi )
+                     if fi-here > limit then
+                         here = st - #indent
+                         return "\n"..indent..word
+                     end
+                 end )
+             end
+             local rowName = textWrap( event.target.text, 36, "    ", nil )
+            if string.len(event.target.text) > 36 then 
+                rowHeight = 72
+            else 
+                rowHeight = 36 
+            end
             print ("i am in getListName")
             globals.blRows[#globals.blRows+1] = "     " .. event.target.text    
             print("New row: " .. globals.blRows[#globals.blRows])
