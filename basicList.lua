@@ -25,7 +25,7 @@ function scene:create( event )
         -- Get reference to the row group
         local row = event.row
         
-        -- Cache the row "contentWidth" and "contentHeight" because the row bounds can change as children objects are added
+        -- Cache the row "contentWidth" and "contentHeight" because the row bounds can change as 
         local rowHeight = row.contentHeight
         local rowWidth = row.contentWidth
         
@@ -43,7 +43,8 @@ function scene:create( event )
                 rowTitle.x = constants.leftPadding
             end
         else
-            rowTitle = display.newText(row, globals.blRows[row.index], 0,0, 310, rowHeight, globals.font.regular, 20, left)
+            rowTitle = display.newText(row, globals.blRows[row.index], 0,0, 310, rowHeight, 
+globals.font.regular, 20, left)
             rowTitle:setFillColor(0,0,0)
             rowTitle.x = constants.leftPadding
         end
