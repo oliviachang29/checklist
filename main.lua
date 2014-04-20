@@ -7,6 +7,7 @@ display.setStatusBar(display.HiddenStatusBar)
 --system.activate( "multitouch" )
 local json = require("json")
 local composer = require("composer") --so it can go to scenes
+system.setTapDelay( 0.5 )
 
 local background = display.newRect( display.screenOriginX,
 display.screenOriginY, 

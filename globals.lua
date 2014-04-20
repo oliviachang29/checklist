@@ -13,4 +13,21 @@ globals.font =
 --for basiclist
 globals.basicListTableView = widget.newTableView --change name to bLTableView
 
+function globals.textWrap( str, limit, indent, indent1 )
+    
+    limit = limit
+    indent = indent
+    indent1 = indent
+    
+    local here = 1 - #indent1
+    return indent1..str:gsub( "(%s+)()(%S+)()",
+    function( sp, st, word, fi )
+        if fi-here > limit then
+            here = st - #indent
+            return "\n"..indent..word
+        end
+    end )
+end
+
+
 return globals

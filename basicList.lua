@@ -35,15 +35,15 @@ function scene:create( event )
         if (row.isCategory) then
             if row.index == 1 then
                 rowText = "CATEGORY 1"
-                rowTitle = display.newText(row, rowText, 0, 0, globals.font.regular, 20)
+                rowTitle = display.newText(row, rowText, 0, 0, 310, rowHeight, globals.font.regular, 20)
                 rowTitle.x = constants.leftPadding
             else
                 rowText = "CATEGORY " .. row.index % 10 + 1
-                rowTitle = display.newText(row, rowText, 0, 0, globals.font.regular, 20) 
+                rowTitle = display.newText(row, rowText, 0, 0, 310, rowHeight, globals.font.regular, 20) 
                 rowTitle.x = constants.leftPadding
             end
         else
-            rowTitle = display.newText(row, globals.blRows[row.index], 0,0, globals.font.regular, 20)
+            rowTitle = display.newText(row, globals.blRows[row.index], 0,0, 310, rowHeight, globals.font.regular, 20, left)
             rowTitle:setFillColor(0,0,0)
             rowTitle.x = constants.leftPadding
         end
@@ -53,22 +53,15 @@ function scene:create( event )
         rowTitle.x = 0
         rowTitle.y = rowHeight * 0.5
     end
-    
     local function onRowTouch(event)
-        local phase = event.phase
- 
-        if "press" == phase then
-            --print( "Touched row:", event.target.index )
-            local row = event.target
-            print( "Tapped to delete row: " .. row.index )
-            globals.basicListTableView:deleteRow( row.index )
-
-            table.remove(globals.blRows,row.index)
-        end
-        
-        --then delete the globals.blRows[row.index] and move all the blRows down one
+        local row = event.target
+        print( "Tapped to delete row: " .. row.index )
+        globals.basicListTableView:deleteRow( row.index )
+        table.remove(globals.blRows, row.index)
+        --        globals.blRows[row.index] = "Random Name"
+        --        globals.basicListTableView:reloadData()
+        print("tapped row " .. row.index)
     end
-    
     -- Create the widget
     globals.basicListTableView = widget.newTableView
     {
@@ -80,9 +73,7 @@ function scene:create( event )
         onRowRender = onRowRender,
         onRowTouch = onRowTouch
     }
-    
-    listGroup:insert( globals.basicListTableView )
-    
+    listGroup:insert(globals.basicListTableView)
     
     -- Insert globals.basicListT.numRows rows
     for i = 1, #globals.blRows do
@@ -127,44 +118,36 @@ function scene:create( event )
     
     middleText:setFillColor(0,0,0) 
     
---    local navAddIcon = display.newImage("images/navAddIcon.png")
---    navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
---    listGroup:insert(navAddIcon)
+    --    local navAddIcon = display.newImage("images/navAddIcon.png")
+    --    navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
+    --    listGroup:insert(navAddIcon)
     
     local function getListName(event)
         if (event.phase == "submitted") then
-            print ("i am in getListName")
-            globals.blRows[#globals.blRows+1] = "     " .. event.target.text    
-            print("New row: " .. globals.blRows[#globals.blRows])
-            native.setKeyboardFocus( nil )
+            local rowName = globals.textWrap(event.target.text, 28, "   ", nil)
+            if string.len(event.target.text) > 28 then rowHeight = 72 else rowHeight = 36 end
+            globals.blRows[#globals.blRows+1] = rowName
+            print ("User added row #" .. #globals.blRows .. globals.blRows[#globals.blRows])
             -- Insert a row into the tableView
-            --globals.basicListTableView:reloadData()
-
             globals.basicListTableView:insertRow(
             {
                 isCategory = false,
-                rowHeight = 36,
+                rowHeight = rowHeight,
                 rowColor = { default={1,1,1} },
                 lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
             }
             )
-            print ("test test" .. #globals.blRows)
-
-            --globals.basicListTableView:deleteRow( #globals.blRows - 1 )
-            if #globals.blRows > 4 then
-
-                globals.basicListTableView:scrollToIndex(#globals.blRows - 4, 700)
-            else
-                globals.basicListTableView:scrollToIndex(#globals.blRows, 700)
+            if #globals.blRows > 10 then
+                globals.basicListTableView:scrollToIndex(#globals.blRows - 9, 700)
             end
             event.target.text = '' --clear textfield
         end
     end
     --Create text field
-        local taskNameField = native.newTextField( 160, 75, 320, 53) --centerX, centerY, width, height
-        taskNameField.placeholder = "Tap to add an item into " .. listName
-        -- if touched, go to getListName
-        taskNameField:addEventListener("userInput",getListName)
+    local taskNameField = native.newTextField( 160, 75, 320, 53) --centerX, centerY, width, height
+    taskNameField.placeholder = "Tap to add an item into " .. listName
+    -- if touched, go to getListName
+    taskNameField:addEventListener("userInput",getListName)
     
     --Fix scope!
     function openSideMenu( )
