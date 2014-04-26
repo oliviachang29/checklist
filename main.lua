@@ -21,7 +21,7 @@ background:toBack()
 
 globals = require ("globals")
 
-globals.blRows = loadTable("blrows.json")
+globals.blRows = loadTable("blRows.json")
 if globals.blRows == nil then
     globals.blRows = {}
 end

@@ -55,12 +55,12 @@ function scene:create( event )
     end
     local function onRowTouch(event)
         local row = event.target
-        print( "Tapped to delete row: " .. row.index )
-        globals.basicListTableView:deleteRow( row.index )
-        table.remove(globals.blRows, row.index)
-        --        globals.blRows[row.index] = "Random Name"
-        --        globals.basicListTableView:reloadData()
-        print("tapped row " .. row.index)
+        print( "Tapped to rename row: " .. row.index )
+        --globals.basicListTableView:deleteRow( row.index )
+        --table.remove(globals.blRows, row.index)
+        globals.blRows[row.index] = "Random Name"
+        globals.basicListTableView:reloadData()
+        print("renamed row " .. globals.blRows[row.index])
         saveTable(globals.blRows, "blRows.json")
     end
     -- Create the widget
@@ -128,6 +128,7 @@ function scene:create( event )
             local rowName = globals.textWrap(event.target.text, 28, "   ", nil)
             if string.len(event.target.text) > 28 then rowHeight = 72 else rowHeight = 36 end
             globals.blRows[#globals.blRows+1] = rowName
+            native.setKeyboardFocus( event.target )
             print ("User added row #" .. #globals.blRows .. globals.blRows[#globals.blRows])
             -- Insert a row into the tableView
             globals.basicListTableView:insertRow(
