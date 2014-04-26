@@ -3,7 +3,7 @@
 --require "CiderDebugger";
 
 
-display.setStatusBar(display.HiddenStatusBar)
+display.setStatusBar(display.TranslucentStatusBar)
 --system.activate( "multitouch" )
 local json = require("json")
 local composer = require("composer") --so it can go to scenes
@@ -21,11 +21,9 @@ background:toBack()
 
 globals = require ("globals")
 
-globals.blRows = {}
-
---globals.blRows = loadTable("blrows.json")
---if globals.blRows == nil then
---	globals.blRows = {}
---end
+globals.blRows = loadTable("blrows.json")
+if globals.blRows == nil then
+    globals.blRows = {}
+end
 
 composer.gotoScene("basicList")

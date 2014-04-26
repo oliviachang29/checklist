@@ -43,8 +43,7 @@ function scene:create( event )
                 rowTitle.x = constants.leftPadding
             end
         else
-            rowTitle = display.newText(row, globals.blRows[row.index], 0,0, 310, rowHeight, 
-globals.font.regular, 20, left)
+            rowTitle = display.newText(row, globals.blRows[row.index], 0,0, 310, rowHeight, globals.font.regular, 20, left)
             rowTitle:setFillColor(0,0,0)
             rowTitle.x = constants.leftPadding
         end
@@ -62,12 +61,13 @@ globals.font.regular, 20, left)
         --        globals.blRows[row.index] = "Random Name"
         --        globals.basicListTableView:reloadData()
         print("tapped row " .. row.index)
+        saveTable(globals.blRows, "blRows.json")
     end
     -- Create the widget
     globals.basicListTableView = widget.newTableView
     {
         left = 0,
-        top = 100, --50
+        top = 120, --50
         height = 440,
         width = 320,
         hideScrollBar = true,
@@ -105,7 +105,7 @@ globals.font.regular, 20, left)
         
     end
     --Create navigation things
-    local navBar = display.newRect(320, 0, 640, 100)
+    local navBar = display.newRect(320, 20, 640, 100)
     
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     listGroup:insert(navBar)
@@ -115,7 +115,7 @@ globals.font.regular, 20, left)
     listGroup:insert(toSideMenuIcon)
     
     local listName = "To Do"
-    local middleText = display.newText(listGroup, listName, constants.centerX, 23, globals.font.regular, 20) -- middleText is the name of the list. It is in the middle
+    local middleText = display.newText(listGroup, listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list. It is in the middle
     
     middleText:setFillColor(0,0,0) 
     
@@ -142,10 +142,11 @@ globals.font.regular, 20, left)
                 globals.basicListTableView:scrollToIndex(#globals.blRows - 9, 700)
             end
             event.target.text = '' --clear textfield
+            saveTable(globals.blRows, "blRows.json")
         end
     end
     --Create text field
-    local taskNameField = native.newTextField( 160, 75, 320, 53) --centerX, centerY, width, height
+    local taskNameField = native.newTextField( 160, 95, 320, 53) --centerX, centerY, width, height
     taskNameField.placeholder = "Tap to add an item into " .. listName
     -- if touched, go to getListName
     taskNameField:addEventListener("userInput",getListName)
