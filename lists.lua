@@ -1,202 +1,226 @@
 --lists.lua
---(c) 2014 Olivia Chang
 
 --Require
-local widget = require( "widget" ) --widgets supplied by corona
-local globals = require("globals") --globals.lua
+local widget = require( "widget" ) --widgets supplied by corona, not in a file
+local globals = require("globals")
 local constants = require("constants")
-local storyboard = require("storyboard")
+local composer = require("composer")
 
-local scene = storyboard.newScene()
+local scene = composer.newScene()
 
--- Clear previous scene
-storyboard.removeAll()
-
--- local forward references should go here --
-
+-- local forward references should go here --globals
 
 -- Called when the scene's view does not exist:
-function scene:createScene( event )
-    local group = self.view
-    --Navigation
-    local navBar = display.newRect(0, 0, 640, 100)
-    navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
-    group:insert(navBar)
+function scene:create( event )
+    print("I am in lists.lua")
+    local sceneGroup = self.view
     
-    local toSideMenuIcon = display.newImage("images/toSideMenuIcon.png")
-    toSideMenuIcon.x, toSideMenuIcon.y = 20, constants.defaultIconPlace.y
-    toSideMenuIcon:scale(0.09, 0.09)
-    group:insert(toSideMenuIcon)
     
-    local navText = display.newText(group, "Menu", 65, 23, "Museo Sans 300", 20) --navText is the menu text "Menu"
-    navText:setFillColor(1,1,1)
-    local listNameText = display.newText(group, "Lists", constants.centerX, 23, "Museo Sans 300", 20) --listNameText is the title text Menu
-    listNameText:setFillColor(0,0,0)
+    local listGroup = display.newGroup()
+    sceneGroup:insert(listGroup)
     
---    --Segmented Control
---    -- Listen for segmented control events      
---    local function onSegmentPress( event )
---        local target = event.target
---        if target.segmentNumber == 1 then
---            globals.listTitle = "Basic List"
---        else if target.segmentNumber == 2 then
---            globals.listTitle = "Task List"
---        else if target.segmentNumber == 3 then
---            globals.listTitle = "Grocery List"
---        else
---            print("rowText not changing on segment press")
---        end
---        end
---       end
---        
---        globals.tableView:reloadData()
---
---        print( "Segment Label is:", target.segmentLabel )
---        print( "Segment Number is:", target.segmentNumber )
---    end
-    
---    -- Create a default segmented control
---    local segmentedControl = widget.newSegmentedControl
---    {
---        left = constants.centerX - 125,
---        top = 75,
---        segmentWidth = 85,
---        segments = { "Basic Lists", "Task Lists", "Grocery Lists"},
---        defaultSegment = 1,
---        onPress = onSegmentPress
---    }
-    
-    --LIST (with no categories)
     local function onRowRender( event )
         
         -- Get reference to the row group
         local row = event.row
         
-        -- Cache the row "contentWidth" and "contentHeight" because the row bounds can change as children objects are added
+        -- Cache the row "contentWidth" and "contentHeight" because the row bounds can change as 
         local rowHeight = row.contentHeight
         local rowWidth = row.contentWidth
         
-        local rowTitle = display.newText( row, globals.listTitle.." " .. row.index, 0, 0, "Museo Sans 300", 20 ) --"List"" will be "rowText"
-        rowTitle:setFillColor( 0 )
+        local rowTitle
+        local rowText
+        
+        if (row.isCategory) then
+            if row.index == 1 then
+                rowText = "CATEGORY 1"
+                rowTitle = display.newText(row, rowText, 0, 0, 310, rowHeight, globals.font.regular, 20)
+                rowTitle.x = constants.leftPadding
+            else
+                rowText = "CATEGORY " .. row.index % 10 + 1
+                rowTitle = display.newText(row, rowText, 0, 0, 310, rowHeight, globals.font.regular, 20) 
+                rowTitle.x = constants.leftPadding
+            end
+        else
+            rowTitle = display.newText(row, globals.lists[row.index], 0,0, 310, rowHeight, globals.font.regular, 20, left)
+            rowTitle:setFillColor(0,0,0)
+            rowTitle.x = constants.leftPadding
+        end
         
         -- Align the label left and vertically centered
         rowTitle.anchorX = 0
-        rowTitle.x = constants.leftPadding
+        rowTitle.x = 0
         rowTitle.y = rowHeight * 0.5
     end
-    
+    local function onRowTouch(event)
+        local row = event.target
+        composer.gotoScene(globals.lists[row.index], {effect = "slideLeft"})
+    end
     -- Create the widget
-    globals.tableView = widget.newTableView
+    globals.listTV = widget.newTableView
     {
-        left = 1,
-        top = 50, --for segmented control it is 125
+        left = 0,
+        top = 70, --50
         height = 440,
         width = 320,
+        hideScrollBar = true,
         onRowRender = onRowRender,
-        onRowTouch = onRowTouch,
-        listener = scrollListener
+        onRowTouch = onRowTouch
     }
-    group:insert(globals.tableView)
+    listGroup:insert(globals.listTV)
     
-    -- Insert 40 rows
-    for i = 1, 1 do
+    -- Insert globals.basicListT.numRows rows
+    for i = 1, #globals.lists do
+        
+        -- default is that row isn't a category
+        --these are the white rows
+        isCategory = false
+        rowHeight = 36
+        rowColor = { default={1,1,1} }
+        
+        --        -- Make some rows categories
+        --        --these are the dark blues
+        --        if ( i == 1 or i % 11 == 0 ) then
+        --            isCategory = true
+        --            rowHeight = 50
+        --            rowColor = { default={constants.darkblue.r, constants.darkblue.g, constants.darkblue.b} }
+        --        end
+        
         -- Insert a row into the tableView
-          -- Insert a row into the tableView
-        globals.tableView:insertRow(
+        globals.listTV:insertRow(
         {
-            isCategory = false,
-            rowHeight = 36,
-            rowColor = { default={1,1,1} },
+            isCategory = isCategory,
+            rowHeight = rowHeight,
+            rowColor = rowColor,
             lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
         }
         )
+        
     end
-    local function onTableViewTap(event)
-        globals.tableView:removeEventListener("tap", onTableViewTap)
-        storyboard.gotoScene( "basicList", {effect = "fromRight"})
-    end
-    globals.tableView:addEventListener("tap", onTableViewTap)
+    --Create navigation things
+    local navBar = display.newRect(320, 20, 640, 100) --x, y, width, height
     
-end
-
--- Called BEFORE scene has moved onscreen:
-function scene:willEnterScene( event )
-    local group = self.view
+    navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
+    listGroup:insert(navBar)
     
-end
-
--- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
-    local group = self.view
---    if listNameText != nil then
---        print "listNameText is not nil"
+    local toSideMenuIcon = display.newImage("images/toSideMenuIcon.png")
+    toSideMenuIcon.x, toSideMenuIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
+    listGroup:insert(toSideMenuIcon)
+    
+    local listName = "Lists"
+    local middleText = display.newText(listGroup, listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list. It is in the middle
+    
+    middleText:setFillColor(0,0,0) 
+    
+    --    local navAddIcon = display.newImage("images/navAddIcon.png")
+    --    navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23
+    --    listGroup:insert(navAddIcon)
+    
+--    local function getListName(event)
+--        if (event.phase == "submitted") then
+--            local rowName = globals.textWrap(event.target.text, 28, "   ", nil)
+--            if string.len(event.target.text) > 28 then rowHeight = 72 else rowHeight = 36 end
+--            globals.blRows[#globals.blRows+1] = rowName
+--            native.setKeyboardFocus( event.target )
+--            print ("User added row #" .. #globals.blRows .. globals.blRows[#globals.blRows])
+--            -- Insert a row into the tableView
+--            globals.listTV:insertRow(
+--            {
+--                isCategory = false,
+--                rowHeight = rowHeight,
+--                rowColor = { default={1,1,1} },
+--                lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
+--            }
+--            )
+--            if #globals.blRows > 10 then
+--                globals.listTV:scrollToIndex(#globals.blRows - 9, 700)
+--            end
+--            event.target.text = '' --clear textfield
+--            saveTable(globals.blRows, "blRows.json")
+--        end
 --    end
-end
-
--- Called when scene is about to move offscreen:
-function scene:exitScene( event )
-    local group = self.view
+--    --Create text field
+--    local taskNameField = native.newTextField( 160, 95, 320, 53) --centerX, centerY, width, height
+--    taskNameField.placeholder = "Tap to add an item into " .. listName
+--    -- if touched, go to getListName
+--    taskNameField:addEventListener("userInput",getListName)
+--    
+    --Fix scope!
+    function openSideMenu( )
+        transition.to(listGroup, {time = 300, x = constants.centerX + 100 })
+        transition.to(taskNameField, {time = 300, x = 420})
+        -- Need this so that we don't immediately call the next event listener
+        timer.performWithDelay(1,addCloseEventWithDelay)
+        print("Side Menu Opened.")
+    end
+    
+    function closeSideMenu()
+        transition.to(listGroup, {time = 300, x = 0 })
+        transition.to(taskNameField, {time = 300, x = 160})
+        print("Side Menu Closed.")
+        timer.performWithDelay(1,addOpenEventWithDelay)
+    end
+    
+    function addCloseEventWithDelay() -- Called First
+        toSideMenuIcon:addEventListener("tap",closeSideMenu)
+    end
+    
+    function addOpenEventWithDelay() -- Called Second
+        toSideMenuIcon:addEventListener("tap",openSideMenu)
+    end
+    
+    toSideMenuIcon:addEventListener("tap", openSideMenu)
     
 end
 
--- Called AFTER scene has finished moving offscreen:
-function scene:didExitScene( event )
-    local group = self.view
+function scene:show( event )
     
+    local sceneGroup = self.view
+    local phase = event.phase
+    
+    if ( phase == "will" ) then
+        -- Called when the scene is still off screen (but is about to come on screen).
+    elseif ( phase == "did" ) then
+        -- Called when the scene is now on screen.
+        -- Insert code here to make the scene come alive.
+        -- Example: start timers, begin animation, play audio, etc.
+        
+    end
 end
 
--- Called prior to the removal of scene's "view" (display view)
-function scene:destroyScene( event )
-    local group = self.view
+-- "scene:hide()"
+function scene:hide( event )
     
+    local sceneGroup = self.view
+    local phase = event.phase
+    
+    if ( phase == "will" ) then
+        native.setKeyboardFocus( nil )
+        -- Called when the scene is on screen (but is about to go off screen).
+        -- Insert code here to "pause" the scene.
+        -- Example: stop timers, stop animation, stop audio, etc.
+    elseif ( phase == "did" ) then
+        -- Called immediately after scene goes off screen.
+    end
 end
 
--- Called if/when overlay scene is displayed via storyboard.showOverlay()
-function scene:overlayBegan( event )
-    local group = self.view
-    local overlay_name = event.sceneName  -- name of the overlay scene
+-- "scene:destroy()"
+function scene:destroy( event )
     
-end
-
--- Called if/when overlay scene is hidden/removed via storyboard.hideOverlay()
-function scene:overlayEnded( event )
-    local group = self.view
-    local overlay_name = event.sceneName  -- name of the overlay scene
-    
+    local sceneGroup = self.view
+    -- Called prior to the removal of scene's view ("sceneGroup").
+    -- Insert code here to clean up the scene.
+    -- Example: remove display objects, save state, etc.
 end
 
 ---------------------------------------------------------------------------------
--- END OF YOUR IMPLEMENTATION
----------------------------------------------------------------------------------
 
--- "createScene" event is dispatched if scene's view does not exist
-scene:addEventListener( "createScene", scene )
-
--- "willEnterScene" event is dispatched before scene transition begins
-scene:addEventListener( "willEnterScene", scene )
-
--- "enterScene" event is dispatched whenever scene transition has finished
-scene:addEventListener( "enterScene", scene )
-
--- "exitScene" event is dispatched before next scene's transition begins
-scene:addEventListener( "exitScene", scene )
-
--- "didExitScene" event is dispatched after scene has finished transitioning out
-scene:addEventListener( "didExitScene", scene )
-
--- "destroyScene" event is dispatched before view is unloaded, which can be
--- automatically unloaded in low memory situations, or explicitly via a call to
--- storyboard.purgeScene() or storyboard.removeScene().
-scene:addEventListener( "destroyScene", scene )
-
--- "overlayBegan" event is dispatched when an overlay scene is shown
-scene:addEventListener( "overlayBegan", scene )
-
--- "overlayEnded" event is dispatched when an overlay scene is hidden/removed
-scene:addEventListener( "overlayEnded", scene )
+-- Listener setup
+scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
 
 ---------------------------------------------------------------------------------
 
 return scene
-
-

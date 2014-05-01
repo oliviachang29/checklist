@@ -22,8 +22,14 @@ background:toBack()
 globals = require ("globals")
 
 globals.blRows = loadTable("blRows.json")
+globals.lists = loadTable("lists.json")
 if globals.blRows == nil then
     globals.blRows = {}
+    globals.lists = {}
+    globals.lists[1] = "basicList"
+    globals.lists[2] = "basicList"
+    globals.lists[3] = "basicList"
+    globals.lists[4] = "basicList"
 end
 
-composer.gotoScene("basicList")
+composer.gotoScene("lists")

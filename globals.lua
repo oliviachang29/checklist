@@ -10,8 +10,9 @@ globals.font =
     bold = "Museo Sans 500"
 }
 
---for basiclist
-globals.basicListTableView = widget.newTableView --change name to bLTableView
+globals.listName = "To Do"
+globals.listsTV = widget.newTableView --change name to bLTableView
+globals.basicListTableView = widget.newTableView
 
 function globals.textWrap( str, limit, indent, indent1 )
     

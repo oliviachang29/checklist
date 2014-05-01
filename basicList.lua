@@ -1,5 +1,4 @@
 --basicList.lua
---(c) 2014 Olivia Chang
 
 --Require
 local widget = require( "widget" ) --widgets supplied by corona, not in a file
@@ -56,11 +55,12 @@ function scene:create( event )
     local function onRowTouch(event)
         local row = event.target
         print( "Tapped to rename row: " .. row.index )
-        --globals.basicListTableView:deleteRow( row.index )
-        --table.remove(globals.blRows, row.index)
-        globals.blRows[row.index] = "Random Name"
-        globals.basicListTableView:reloadData()
-        print("renamed row " .. globals.blRows[row.index])
+        globals.basicListTableView:deleteRow( row.index )
+        table.remove(globals.blRows, row.index)
+--        globals.blRows[row.index] = "   Random Name"
+--        globals.basicListTableView:reloadData()
+--        print("renamed row " .. globals.blRows[row.index])
+
         saveTable(globals.blRows, "blRows.json")
     end
     -- Create the widget
@@ -110,12 +110,15 @@ function scene:create( event )
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     listGroup:insert(navBar)
     
-    local toSideMenuIcon = display.newImage("images/toSideMenuIcon.png")
-    toSideMenuIcon.x, toSideMenuIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
-    listGroup:insert(toSideMenuIcon)
+    local toListsIcon = display.newImage("images/navArrowIcon.png")
+    toListsIcon.x, toListsIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
+    listGroup:insert(toListsIcon)
+    local function goToLists()
+        composer.gotoScene("lists", {effect = "slideRight"})
+    end
+    toListsIcon:addEventListener("tap", goToLists)
     
-    local listName = "To Do"
-    local middleText = display.newText(listGroup, listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list. It is in the middle
+    local middleText = display.newText(listGroup, globals.listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list
     
     middleText:setFillColor(0,0,0) 
     
@@ -147,36 +150,10 @@ function scene:create( event )
         end
     end
     --Create text field
-    local taskNameField = native.newTextField( 160, 95, 320, 53) --centerX, centerY, width, height
-    taskNameField.placeholder = "Tap to add an item into " .. listName
+    globals.taskNameField = native.newTextField( 160, 95, 320, 53) --centerX, centerY, width, height
+    globals.taskNameField.placeholder = "Tap to add an item into " .. globals.listName
     -- if touched, go to getListName
-    taskNameField:addEventListener("userInput",getListName)
-    
-    --Fix scope!
-    function openSideMenu( )
-        transition.to(listGroup, {time = 300, x = constants.centerX + 100 })
-        transition.to(taskNameField, {time = 300, x = 420})
-        -- Need this so that we don't immediately call the next event listener
-        timer.performWithDelay(1,addCloseEventWithDelay)
-        print("Side Menu Opened.")
-    end
-    
-    function closeSideMenu()
-        transition.to(listGroup, {time = 300, x = 0 })
-        transition.to(taskNameField, {time = 300, x = 160})
-        print("Side Menu Closed.")
-        timer.performWithDelay(1,addOpenEventWithDelay)
-    end
-    
-    function addCloseEventWithDelay() -- Called First
-        toSideMenuIcon:addEventListener("tap",closeSideMenu)
-    end
-    
-    function addOpenEventWithDelay() -- Called Second
-        toSideMenuIcon:addEventListener("tap",openSideMenu)
-    end
-    
-    toSideMenuIcon:addEventListener("tap", openSideMenu)
+    globals.taskNameField:addEventListener("userInput",getListName)
     
 end
 
@@ -203,6 +180,7 @@ function scene:hide( event )
     
     if ( phase == "will" ) then
         native.setKeyboardFocus( nil )
+        globals.taskNameField:removeSelf()
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.
