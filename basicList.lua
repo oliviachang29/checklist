@@ -57,10 +57,10 @@ function scene:create( event )
         print( "Tapped to rename row: " .. row.index )
         globals.basicListTableView:deleteRow( row.index )
         table.remove(globals.blRows, row.index)
---        globals.blRows[row.index] = "   Random Name"
---        globals.basicListTableView:reloadData()
---        print("renamed row " .. globals.blRows[row.index])
-
+        --        globals.blRows[row.index] = "   Random Name"
+        --        globals.basicListTableView:reloadData()
+        --        print("renamed row " .. globals.blRows[row.index])
+        
         saveTable(globals.blRows, "blRows.json")
     end
     -- Create the widget
@@ -149,11 +149,6 @@ function scene:create( event )
             saveTable(globals.blRows, "blRows.json")
         end
     end
-    --Create text field
-    globals.taskNameField = native.newTextField( 160, 95, 320, 53) --centerX, centerY, width, height
-    globals.taskNameField.placeholder = "Tap to add an item into " .. globals.listName
-    -- if touched, go to getListName
-    globals.taskNameField:addEventListener("userInput",getListName)
     
 end
 
@@ -165,6 +160,11 @@ function scene:show( event )
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
     elseif ( phase == "did" ) then
+        --Create text field
+        globals.taskNameField = native.newTextField( 160, 95, 320, 53) --centerX, centerY, width, height
+        globals.taskNameField.placeholder = "Tap to add an item into " .. globals.listName
+        -- if touched, go to getListName
+        globals.taskNameField:addEventListener("userInput",getListName)
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
@@ -180,7 +180,8 @@ function scene:hide( event )
     
     if ( phase == "will" ) then
         native.setKeyboardFocus( nil )
-        globals.taskNameField:removeSelf()
+        display.remove( globals.taskNameField )
+        globals.taskNameField = nil
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.

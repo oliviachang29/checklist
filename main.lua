@@ -25,6 +25,8 @@ globals.blRows = loadTable("blRows.json")
 globals.lists = loadTable("lists.json")
 if globals.blRows == nil then
     globals.blRows = {}
+end
+if globals.lists == nil then
     globals.lists = {}
     globals.lists[1] = "basicList"
     globals.lists[2] = "basicList"
