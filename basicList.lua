@@ -180,7 +180,7 @@ function scene:hide( event )
     
     if ( phase == "will" ) then
         native.setKeyboardFocus( nil )
-        globals.taskNameField:removeSelf()
+        -- globals.taskNameField:remove()
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.
