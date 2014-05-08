@@ -161,10 +161,10 @@ function scene:show( event )
         -- Called when the scene is still off screen (but is about to come on screen).
     elseif ( phase == "did" ) then
         --Create text field
-        globals.taskNameField = native.newTextField( 160, 95, 320, 53) --centerX, centerY, width, height
-        globals.taskNameField.placeholder = "Tap to add an item into " .. globals.listName
+        --globals.taskNameField = native.newTextField( 160, 95, 320, 53) --centerX, centerY, width, height
+        --globals.taskNameField.placeholder = "Tap to add an item into " .. globals.listName
         -- if touched, go to getListName
-        globals.taskNameField:addEventListener("userInput",getListName)
+        --globals.taskNameField:addEventListener("userInput",getListName)
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
