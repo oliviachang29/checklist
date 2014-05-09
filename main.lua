@@ -28,10 +28,10 @@ if globals.blRows == nil then
 end
 if globals.lists == nil then
     globals.lists = {}
-    globals.lists[1] = "basicList"
-    globals.lists[2] = "basicList"
-    globals.lists[3] = "basicList"
-    globals.lists[4] = "basicList"
+    globals.lists[1] = "Homework"
+    globals.lists[2] = "Chores"
+    globals.lists[3] = "Grocery List"
+    globals.lists[4] = "Books to Read"
 end
 
 composer.gotoScene("lists")

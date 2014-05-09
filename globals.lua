@@ -13,6 +13,7 @@ globals.font =
 globals.listName = "To Do"
 globals.listsTV = widget.newTableView --change name to bLTableView
 globals.basicListTableView = widget.newTableView
+globals.middleText = nil
 
 function globals.textWrap( str, limit, indent, indent1 )
     

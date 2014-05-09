@@ -114,13 +114,18 @@ function scene:create( event )
     toListsIcon.x, toListsIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
     listGroup:insert(toListsIcon)
     local function goToLists()
+
+        globals.middleText.text = globals.listName
         composer.gotoScene("lists", {effect = "slideRight"})
+        -- = display.newText(listGroup, globals.listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list
+    
+        --middleText:setFillColor(0,0,0) 
     end
     toListsIcon:addEventListener("tap", goToLists)
     
-    local middleText = display.newText(listGroup, globals.listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list
+    globals.middleText = display.newText(listGroup, globals.listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list
     
-    middleText:setFillColor(0,0,0) 
+    globals.middleText:setFillColor(0,0,0) 
     
     --    local navAddIcon = display.newImage("images/navAddIcon.png")
     --    navAddIcon.x, navAddIcon.y = constants.centerX + 125, 23

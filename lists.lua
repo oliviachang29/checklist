@@ -54,7 +54,15 @@ function scene:create( event )
     end
     local function onRowTouch(event)
         local row = event.target
-        composer.gotoScene(globals.lists[row.index], {effect = "slideLeft"})
+        -- globals.lists[row.index]
+        if globals.middleText == nil then
+            globals.listName = globals.lists[row.index]
+        else 
+            globals.middleText.text = globals.lists[row.index]
+        end
+
+        composer.gotoScene("basicList", {effect = "slideLeft"})
+        --composer.gotoScene("basicList", {effect = "slideLeft"})
     end
     -- Create the widget
     globals.listTV = widget.newTableView
