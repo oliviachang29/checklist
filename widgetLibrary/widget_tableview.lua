@@ -1112,7 +1112,7 @@ local function createTableView( tableView, options )
 		
 	end
 	
-	-- Function to deleta all rows from the tableView
+	-- Function to delete all rows from the tableView
 	function view:_deleteAllRows()
 		local _tableView = self.parent
 		self._numberOfRows = 0

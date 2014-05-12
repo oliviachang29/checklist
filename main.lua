@@ -23,10 +23,14 @@ background:toBack()
 
 globals = require ("globals")
 
-globals.blRows = loadTable("blRows.json")
+--globals.blRows = loadTable("blRows.json")
 globals.lists = loadTable("lists.json")
 if globals.blRows == nil then
     globals.blRows = {}
+    globals.blRows[1] = "Homework"
+    globals.blRows[2] = "Notes"
+    globals.blRows[3] = "Grocery List"
+    globals.blRows[4] = "Books to Read"
 end
 if globals.lists == nil then
     globals.lists = {}
