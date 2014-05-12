@@ -114,11 +114,12 @@ function scene:create( event )
     toListsIcon.x, toListsIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
     listGroup:insert(toListsIcon)
     local function goToLists()
-
+        
         globals.middleText.text = globals.listName
+        globals.placeholderText = "Tap to add an item into " .. globals.listName
         composer.gotoScene("lists", {effect = "slideRight"})
         -- = display.newText(listGroup, globals.listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list
-    
+        
         --middleText:setFillColor(0,0,0) 
     end
     toListsIcon:addEventListener("tap", goToLists)
@@ -133,8 +134,8 @@ function scene:create( event )
     
     local function getListName(event)
         if (event.phase == "submitted") then
-            local rowName = globals.textWrap(event.target.text, 28, "   ", nil)
-            if string.len(event.target.text) > 28 then rowHeight = 72 else rowHeight = 36 end
+            local rowName = globals.textWrap(event.target.text, 36, "   ", nil)
+            if string.len(event.target.text) > 28 then rowHeight = 64 else rowHeight = 36 end
             globals.blRows[#globals.blRows+1] = rowName
             native.setKeyboardFocus( event.target )
             print ("User added row #" .. #globals.blRows .. globals.blRows[#globals.blRows])
@@ -147,14 +148,18 @@ function scene:create( event )
                 lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
             }
             )
-            if #globals.blRows > 10 then
-                globals.basicListTableView:scrollToIndex(#globals.blRows - 9, 700)
+            if #globals.blRows > 5 then
+                globals.basicListTableView:scrollToIndex(#globals.blRows - 4, 700)
             end
             event.target.text = '' --clear textfield
             saveTable(globals.blRows, "blRows.json")
         end
     end
-    
+    --Create text field
+    globals.taskNameField = native.newTextField( 158, 97, 322, 55) --centerX, centerY, width, height
+    globals.taskNameField.placeholder = globals.placeholderText
+    --if touched, go to getListName
+    globals.taskNameField:addEventListener("userInput",getListName)
 end
 
 function scene:show( event )
@@ -165,11 +170,6 @@ function scene:show( event )
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
     elseif ( phase == "did" ) then
-        --Create text field
-        --globals.taskNameField = native.newTextField( 160, 95, 320, 53) --centerX, centerY, width, height
-        --globals.taskNameField.placeholder = "Tap to add an item into " .. globals.listName
-        -- if touched, go to getListName
-        --globals.taskNameField:addEventListener("userInput",getListName)
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
@@ -185,8 +185,8 @@ function scene:hide( event )
     
     if ( phase == "will" ) then
         native.setKeyboardFocus( nil )
-        -- globals.taskNameField:remove()
-
+        globals.taskNameField:toBack()
+        
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.

@@ -42,7 +42,7 @@ function scene:create( event )
                 rowTitle.x = constants.leftPadding
             end
         else
-            rowTitle = display.newText(row, globals.lists[row.index], 0,0, 310, rowHeight, globals.font.regular, 20, left)
+            rowTitle = display.newText(row, "    " .. globals.lists[row.index], 0,0, 310, rowHeight, globals.font.regular, 20, left)
             rowTitle:setFillColor(0,0,0)
             rowTitle.x = constants.leftPadding
         end
@@ -68,7 +68,7 @@ function scene:create( event )
     globals.listTV = widget.newTableView
     {
         left = 0,
-        top = 70, --50
+        top = 75, --50
         height = 440,
         width = 320,
         hideScrollBar = true,
@@ -208,6 +208,7 @@ function scene:hide( event )
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.
     elseif ( phase == "did" ) then
+            globals.taskNameField:toFront()
         -- Called immediately after scene goes off screen.
     end
 end

@@ -80,3 +80,25 @@
  --"device" if on iOS, Android or Xcode Simulator
 globals.environment = system.getInfo( "environment" )
 print("Environment: " .. globals.environment)
+
+--parse
+local parse = require( "mod_parse" )
+parse:init({ 
+  appId = "56LEk2AtKxin9dF2s0gEQEwmWV1OoKOmf6ruU9W1", 
+  apiKey = "jQemKdOCDKFdzbckB1Ovmg4TYwmI7kv9MwBe2qSP"
+})
+parse.showStatus = true
+
+--create user listener
+local function onCreateUser( event )
+  print( event.response.createdAt )
+  print( event.response.sessionToken )
+end
+
+--create Parse User
+local userData = { 
+  ["username"] = "M", 
+  ["password"] = "1234", 
+  ["email"] = "cozymonster29@gmail.com"
+}
+parse:createUser( userData, onCreateUser )

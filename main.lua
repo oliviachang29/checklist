@@ -9,13 +9,15 @@ local json = require("json")
 local composer = require("composer") --so it can go to scenes
 system.setTapDelay( 0.5 )
 
+
+---
 local background = display.newRect( display.screenOriginX,
 display.screenOriginY, 
 display.pixelWidth, 
 display.pixelHeight)
 
 background.x, background.y = display.contentCenterX,  display.contentCenterY
-background:setFillColor(238/255, 238/255, 238/255)
+background:setFillColor(1, 1, 1) --238/255
 
 background:toBack()
 
@@ -29,7 +31,7 @@ end
 if globals.lists == nil then
     globals.lists = {}
     globals.lists[1] = "Homework"
-    globals.lists[2] = "Chores"
+    globals.lists[2] = "Notes"
     globals.lists[3] = "Grocery List"
     globals.lists[4] = "Books to Read"
 end
