@@ -42,7 +42,7 @@ function scene:create( event )
                 rowTitle.x = constants.leftPadding
             end
         else
-            rowTitle = display.newText(row, globals.blRows[row.index], 0,0, 310, rowHeight, globals.font.regular, 20, left)
+            rowTitle = display.newText(row, globals.data.lists[1][row.index], 0,0, 310, rowHeight, globals.font.regular, 20, left)
             rowTitle:setFillColor(0,0,0)
             rowTitle.x = constants.leftPadding
         end
@@ -56,12 +56,11 @@ function scene:create( event )
         local row = event.target
         print( "Tapped to rename row: " .. row.index )
         globals.basicListTableView:deleteRow( row.index )
-        table.remove(globals.blRows, row.index)
-        --        globals.blRows[row.index] = "   Random Name"
+        table.remove(globals.data.lists[1][row.index], row.index)
+        --        globals.data.lists[1][row.index] = "   Random Name"
         --        globals.basicListTableView:reloadData()
-        --        print("renamed row " .. globals.blRows[row.index])
-        
-        saveTable(globals.blRows, "blRows.json")
+        --        print("renamed row " .. globals.data.lists[1][row.index])
+        saveTable(globals.data, "data.json")
     end
     -- Create the widget
     globals.basicListTableView = widget.newTableView
@@ -77,7 +76,7 @@ function scene:create( event )
     listGroup:insert(globals.basicListTableView)
     
     -- Insert globals.basicListT.numRows rows
-    for i = 1, #globals.blRows do
+    for i = 1, #globals.data.lists[1] do
         
         -- default is that row isn't a category
         --these are the white rows
@@ -116,7 +115,7 @@ function scene:create( event )
     local function goToLists()
         
         globals.middleText.text = globals.listName
-        globals.placeholderText = "Tap to add an item into " .. globals.listName
+        globals.placeholderText = "Tap to add an item into " .. "To Do"
         composer.gotoScene("lists", {effect = "slideRight"})
         -- = display.newText(listGroup, globals.listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list
         
@@ -124,7 +123,7 @@ function scene:create( event )
     end
     toListsIcon:addEventListener("tap", goToLists)
     
-    globals.middleText = display.newText(listGroup, globals.listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list
+    globals.middleText = display.newText(listGroup, "To Do", constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list
     
     globals.middleText:setFillColor(0,0,0) 
     
@@ -136,9 +135,9 @@ function scene:create( event )
         if (event.phase == "submitted") then
             local rowName = globals.textWrap(event.target.text, 36, "   ", nil)
             if string.len(event.target.text) > 28 then rowHeight = 64 else rowHeight = 36 end
-            globals.blRows[#globals.blRows+1] = rowName
+            globals.data.lists[1][#globals.data.lists[1]+1] = rowName
             native.setKeyboardFocus( event.target )
-            print ("User added row #" .. #globals.blRows .. globals.blRows[#globals.blRows])
+            print ("User added row #" .. #globals.data.lists[1] .. globals.data.lists[1][#globals.data.lists[1]])
             -- Insert a row into the tableView
             globals.basicListTableView:insertRow(
             {
@@ -148,11 +147,11 @@ function scene:create( event )
                 lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
             }
             )
-            if #globals.blRows > 5 then
-                globals.basicListTableView:scrollToIndex(#globals.blRows - 4, 700)
+            if #globals.data.lists[1] > 5 then
+                globals.basicListTableView:scrollToIndex(#globals.data.lists[1] - 4, 700)
             end
             event.target.text = '' --clear textfield
-            saveTable(globals.blRows, "blRows.json")
+            saveTable(globals.data, "data.json")
         end
     end
     --Create text field

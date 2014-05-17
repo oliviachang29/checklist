@@ -17,21 +17,21 @@ display.pixelWidth,
 display.pixelHeight)
 
 background.x, background.y = display.contentCenterX,  display.contentCenterY
-background:setFillColor(1, 1, 1) --238/255
+background:setFillColor(1,1,1) --238/255
 
 background:toBack()
 
 globals = require ("globals")
-
---globals.blRows = loadTable("blRows.json")
-globals.data = loadTable("data.json")
-if globals.data == nil then
-    globals.data = {}
-    globals.data.lists = {}
-    globals.data.lists[1] = {}
-    globals.data.lists[1]["name"] = "To Do"
-    globals.data.lists[1][1] = "Homework"
-    globals.data.lists[1][2] = "Piano"
+globals.lists = loadTable("lists.json")
+if globals.blRows == nil then
+    globals.blRows = {}
+    globals.blRows[1] = "  Try adding a task."
+    globals.blRows[2] = "  Tap to delete a task."
+    globals.blRows[3] = "  You can't delete the top three."
+end
+if globals.lists == nil then
+    globals.lists = {}
+    globals.lists[1] = "To Do"
 end
 
-composer.gotoScene("lists")
+composer.gotoScene("basicList")

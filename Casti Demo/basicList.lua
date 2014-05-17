@@ -1,4 +1,4 @@
---lists.lua
+--basicList.lua
 
 --Require
 local widget = require( "widget" ) --widgets supplied by corona, not in a file
@@ -12,7 +12,7 @@ local scene = composer.newScene()
 
 -- Called when the scene's view does not exist:
 function scene:create( event )
-    print("I am in lists.lua")
+    
     local sceneGroup = self.view
     
     
@@ -42,7 +42,7 @@ function scene:create( event )
                 rowTitle.x = constants.leftPadding
             end
         else
-            rowTitle = display.newText(row, "    " .. "lol", 0,0, 310, rowHeight, globals.font.regular, 20, left)
+            rowTitle = display.newText(row, globals.blRows[row.index], 0,0, 310, rowHeight, globals.font.regular, 20, left)
             rowTitle:setFillColor(0,0,0)
             rowTitle.x = constants.leftPadding
         end
@@ -54,30 +54,28 @@ function scene:create( event )
     end
     local function onRowTouch(event)
         local row = event.target
-        if globals.middleText == nil then
-            globals.listName = globals.data.lists[row.index][name]
-        else 
-            globals.middleText.text = globals.data.lists[row.index][name]
+        print( "Tapped to rename row: " .. row.index )
+        if row.index > 3 then
+            globals.basicListTableView:deleteRow( row.index )
+            table.remove(globals.blRows, row.index)
+            saveTable(globals.blRows, "blRows.json")
         end
-
-        composer.gotoScene("basicList", {effect = "slideLeft"})
-        --composer.gotoScene("basicList", {effect = "slideLeft"})
     end
     -- Create the widget
-    globals.listTV = widget.newTableView
+    globals.basicListTableView = widget.newTableView
     {
         left = 0,
-        top = 75, --50
+        top = 125, --50
         height = 440,
         width = 320,
         hideScrollBar = true,
         onRowRender = onRowRender,
         onRowTouch = onRowTouch
     }
-    listGroup:insert(globals.listTV)
+    listGroup:insert(globals.basicListTableView)
     
     -- Insert globals.basicListT.numRows rows
-    for i = 1, #globals.data.lists do
+    for i = 1, #globals.blRows do
         
         -- default is that row isn't a category
         --these are the white rows
@@ -85,16 +83,8 @@ function scene:create( event )
         rowHeight = 36
         rowColor = { default={1,1,1} }
         
-        --        -- Make some rows categories
-        --        --these are the dark blues
-        --        if ( i == 1 or i % 11 == 0 ) then
-        --            isCategory = true
-        --            rowHeight = 50
-        --            rowColor = { default={constants.darkblue.r, constants.darkblue.g, constants.darkblue.b} }
-        --        end
-        
         -- Insert a row into the tableView
-        globals.listTV:insertRow(
+        globals.basicListTableView:insertRow(
         {
             isCategory = isCategory,
             rowHeight = rowHeight,
@@ -105,8 +95,7 @@ function scene:create( event )
         
     end
     --Create navigation things
-    local navBar = display.newRect(320, 20, 640, 100) --x, y, width, height
-    
+    local navBar = display.newRect(320, 20, 640, 100)
     navBar:setFillColor(constants.darkteal.r, constants.darkteal.g, constants.darkteal.b)
     listGroup:insert(navBar)
     
@@ -114,25 +103,56 @@ function scene:create( event )
     toSideMenuIcon.x, toSideMenuIcon.y =constants.defaultIconPlace.x, constants.defaultIconPlace.y
     listGroup:insert(toSideMenuIcon)
     
-    local listName = "Lists"
-    local middleText = display.newText(listGroup, listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list. It is in the middle
+    globals.middleText = display.newText(listGroup, globals.listName, constants.centerX, 43, globals.font.regular, 20) -- middleText is the name of the list  
+    globals.middleText:setFillColor(0,0,0) 
     
-    middleText:setFillColor(0,0,0) 
---    
-    --Fix scope!
+    local function getListName(event)
+        if (event.phase == "submitted") then
+            local rowName = globals.textWrap(event.target.text, 40, "  ", nil)
+            if string.len(event.target.text) > 28 then rowHeight = 64 else rowHeight = 36 end
+            globals.blRows[#globals.blRows+1] = rowName
+            native.setKeyboardFocus( event.target )
+            print ("User added row #" .. #globals.blRows .. globals.blRows[#globals.blRows])
+            -- Insert a row into the tableView
+            globals.basicListTableView:insertRow(
+            {
+                isCategory = false,
+                rowHeight = rowHeight,
+                rowColor = { default={1,1,1} },
+                lineColor = {0.93333333333, 0.93333333333, 0.93333333333}
+            }
+            )
+            if #globals.blRows > 5 then
+                globals.basicListTableView:scrollToIndex(#globals.blRows - 4, 700)
+            end
+            event.target.text = '' --clear textfield
+            saveTable(globals.blRows, "blRows.json")
+        end
+    end
+    --Create text field
+    globals.taskNameField = native.newTextField( 160, 97, 322, 55) --centerX, centerY, width, height
+    globals.taskNameField.placeholder = "Tap to add an item in To Do"
+    --if touched, go to getListName
+    globals.taskNameField:addEventListener("userInput",getListName)
+    
+    local icon = display.newImage("Icon.png")
+    icon.x, icon.y = 130, constants.centerY
+    icon:toBack()
     function openSideMenu( )
+        timer.performWithDelay(300,icon:toFront())
         transition.to(listGroup, {time = 300, x = constants.centerX + 100 })
-        transition.to(taskNameField, {time = 300, x = 420})
-        -- Need this so that we don't immediately call the next event listener
+        transition.to(globals.taskNameField, {time = 300, x = 421})
         timer.performWithDelay(1,addCloseEventWithDelay)
         print("Side Menu Opened.")
+        
     end
     
     function closeSideMenu()
         transition.to(listGroup, {time = 300, x = 0 })
-        transition.to(taskNameField, {time = 300, x = 160})
+        transition.to(globals.taskNameField, {time = 300, x = 160})
         print("Side Menu Closed.")
         timer.performWithDelay(1,addOpenEventWithDelay)
+        icon:toBack()
     end
     
     function addCloseEventWithDelay() -- Called First
@@ -144,7 +164,6 @@ function scene:create( event )
     end
     
     toSideMenuIcon:addEventListener("tap", openSideMenu)
-    
 end
 
 function scene:show( event )
@@ -170,11 +189,12 @@ function scene:hide( event )
     
     if ( phase == "will" ) then
         native.setKeyboardFocus( nil )
+        globals.taskNameField:toBack()
+        
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.
     elseif ( phase == "did" ) then
-            globals.taskNameField:toFront()
         -- Called immediately after scene goes off screen.
     end
 end
