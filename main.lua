@@ -17,21 +17,17 @@ display.pixelWidth,
 display.pixelHeight)
 
 background.x, background.y = display.contentCenterX,  display.contentCenterY
-background:setFillColor(1, 1, 1) --238/255
+background:setFillColor(1,1,1) --238/255
 
 background:toBack()
 
 globals = require ("globals")
-
---globals.blRows = loadTable("blRows.json")
-globals.data = loadTable("data.json")
-if globals.data == nil then
-    globals.data = {}
-    globals.data.lists = {}
-    globals.data.lists[1] = {}
-    globals.data.lists[1]["name"] = "To Do"
-    globals.data.lists[1][1] = "Homework"
-    globals.data.lists[1][2] = "Piano"
+globals.lists = loadTable("lists.json")
+if globals.lists == nil then
+    globals.lists = {}
+    globals.lists[1] = "Test"
+    globals.lists[2] = "Test"
+    globals.lists[3] = "Test"
 end
 
-composer.gotoScene("lists")
+composer.gotoScene("list")
